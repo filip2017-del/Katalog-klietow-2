@@ -260,6 +260,19 @@
       "./images/mohawk_3.jpg"
     ]
   },
+    {
+    "name": "Taper Fade",
+    "length": "krótkie",
+    "style": "nowoczesny",
+    "faceShapes": ["owalna", "kwadratowa"],
+    "hairType": ["proste"],
+    "description": "Delikatne przejście długości od boków ku górze. Subtelna wersja fade.",
+    "tags": ["subtelna", "czysta linia"],
+    "images": [
+      "./images/taper_fade.jpg",
+      "./images/taper_fade_2.jpg"
+    ]
+  },
   {
     "name": "Faux Hawk",
     "length": "średnie",
@@ -312,19 +325,7 @@
       "./images/high_and_tight_2.jpg"
     ]
   },
-  {
-    "name": "Taper Fade",
-    "length": "krótkie",
-    "style": "nowoczesny",
-    "faceShapes": ["owalna", "kwadratowa"],
-    "hairType": ["proste"],
-    "description": "Delikatne przejście długości od boków ku górze. Subtelna wersja fade.",
-    "tags": ["subtelna", "czysta linia"],
-    "images": [
-      "./images/taper_fade.jpg",
-      "./images/taper_fade_2.jpg"
-    ]
-  },
+
   {
     "name": "Natural Waves",
     "length": "średnie",
