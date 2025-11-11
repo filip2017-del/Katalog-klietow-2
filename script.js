@@ -26,15 +26,17 @@ async function loadHairstyles() {
   styleFilter.addEventListener("change", applyFilters);
   faceFilter.addEventListener("change", applyFilters);
 
-  await applyFilters(); // pierwsze wyświetlenie
+  await applyFilters();
 }
 
-// === WALIDACJA OBRAZÓW ===
-async function loadValidImages(imagePaths) {
+// === WALIDACJA OBRAZÓW (dostosowana do obiektu images) ===
+async function loadValidImages(imageObj) {
   const DEFAULT_IMAGE = "./images/haircut.jpg";
   const validImages = [];
 
-  for (const src of imagePaths) {
+  for (const key in imageObj) {
+    const data = imageObj[key];
+    const src = typeof data === "string" ? data : data.src;
     if (!src || src.trim() === "") continue;
 
     const img = new Image();
@@ -44,15 +46,15 @@ async function loadValidImages(imagePaths) {
       await new Promise((resolve, reject) => {
         img.onload = () => resolve();
         img.onerror = () => reject();
-        setTimeout(() => reject(), 5000); // timeout 5s
+        setTimeout(() => reject(), 5000);
       });
-      validImages.push(img.src);
+      validImages.push({ key, src: img.src, desc: typeof data === "object" ? data.desc : null });
     } catch (e) {
       // pomijamy nieistniejące
     }
   }
 
-  return validImages.length > 0 ? validImages : [DEFAULT_IMAGE];
+  return validImages.length > 0 ? validImages : [{ key: "default", src: DEFAULT_IMAGE, desc: null }];
 }
 
 // === WYŚWIETLANIE FRYZUR ===
@@ -61,7 +63,7 @@ async function displayHairstyles(list) {
   container.innerHTML = "";
 
   if (list.length === 0) {
-    container.innerHTML = "<p>Brak fryzur spełniających kryteria.</p>";
+    container.innerHTML = "<p style='text-align:center; color:#aaa; grid-column:1/-1;'>Brak fryzur spełniających kryteria.</p>";
     return;
   }
 
@@ -69,27 +71,37 @@ async function displayHairstyles(list) {
     const card = document.createElement("div");
     card.className = "card";
 
-    const rawImages = (item.images || [])
-      .filter(src => src && src.trim() !== "")
-      .map(src => src.trim());
+    // Domyślny klucz
+    const defaultKey = `${item.boki}_${item.gora}_${item.grzywka}`;
+    const imageObj = item.images || {};
+    const validImages = await loadValidImages(imageObj);
 
-    const validImages = await loadValidImages(rawImages);
+    // Znajdź domyślny obraz
+    let defaultVariant = validImages.find(v => v.key === defaultKey);
+    if (!defaultVariant && validImages.length > 0) {
+      defaultVariant = validImages[0];
+    } else if (!defaultVariant) {
+      defaultVariant = { src: "./images/haircut.jpg", desc: null };
+    }
 
     let galleryHTML = `
       <div class="gallery">
-        ${validImages.map((src, i) => `
-          <img src="${src}" alt="${item.name}" ${i === 0 ? 'class="active"' : ''} loading="lazy">
-        `).join('')}
-        
-        ${validImages.length > 1 ? `
-          <button class="gallery-nav prev" aria-label="Poprzednie zdjęcie">‹</button>
-          <button class="gallery-nav next" aria-label="Następne zdjęcie">›</button>
-          <div class="gallery-dots">
-            ${validImages.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
-          </div>
-        ` : ''}
+        <img src="${defaultVariant.src}" alt="${item.name}" class="active" loading="lazy">
+        ${defaultVariant.desc ? `<p class="variant-desc-small">${defaultVariant.desc}</p>` : ""}
+    `;
+
+    if (validImages.length > 1) {
+      galleryHTML += `
+        <button class="gallery-nav prev" aria-label="Poprzednie zdjęcie">‹</button>
+        <button class="gallery-nav next" aria-label="Następne zdjęcie">›</button>
+        <div class="gallery-dots">
+          ${validImages.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
+        </div>
       </div>
     `;
+    } else {
+      galleryHTML += `</div>`;
+    }
 
     card.innerHTML = `
       ${galleryHTML}
@@ -99,7 +111,7 @@ async function displayHairstyles(list) {
       <p>${item.description}</p>
     `;
 
-    // === NOWA FUNKCJA: kliknięcie w kartę otwiera szczegóły ===
+    // Kliknięcie → szczegóły
     card.addEventListener("click", () => {
       localStorage.setItem("selectedHairstyle", JSON.stringify(item));
       window.location.href = "details.html";
@@ -113,20 +125,24 @@ async function displayHairstyles(list) {
   }
 }
 
-// === GALERIA ZDJĘĆ (nawigacja, dotyk, klawiatura) ===
+// === GALERIA ===
 function initGallery(card, images) {
   const gallery = card.querySelector('.gallery');
-  const imgs = card.querySelectorAll('.gallery img');
+  const img = card.querySelector('.gallery img');
+  const desc = card.querySelector('.variant-desc-small');
   const dots = card.querySelectorAll('.gallery-dots .dot');
   const prevBtn = card.querySelector('.gallery-nav.prev');
   const nextBtn = card.querySelector('.gallery-nav.next');
 
   let currentIndex = 0;
-  let startX = 0;
-  let isSwiping = false;
 
   function showImage(index) {
-    imgs.forEach((img, i) => img.classList.toggle('active', i === index));
+    const variant = images[index];
+    img.src = variant.src;
+    if (desc) {
+      desc.textContent = variant.desc || "";
+      desc.style.display = variant.desc ? "block" : "none";
+    }
     dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
     currentIndex = index;
   }
@@ -139,7 +155,6 @@ function initGallery(card, images) {
     showImage((currentIndex - 1 + images.length) % images.length);
   }
 
-  // Przyciski
   if (nextBtn && prevBtn) {
     nextBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -152,38 +167,18 @@ function initGallery(card, images) {
     });
   }
 
-  // Dotyk (mobile)
-  gallery.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    isSwiping = true;
-    gallery.classList.add('swiping');
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showImage(i);
+    });
   });
 
-  gallery.addEventListener('touchmove', (e) => {
-    if (!isSwiping) return;
-    e.preventDefault();
-  }, { passive: false });
-
-  gallery.addEventListener('touchend', (event) => {
-    if (!isSwiping) return;
-    const endX = event.changedTouches[0].clientX;
-    const diff = startX - endX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? nextImage() : prevImage();
-    }
-    isSwiping = false;
-    gallery.classList.remove('swiping');
-  });
-
-  // Kliknięcie w zdjęcie przełącza na kolejne
   gallery.addEventListener('click', (e) => {
-    if (e.target.closest('.gallery-nav')) return;
-    if (e.target.tagName === 'IMG') {
-      nextImage();
-    }
+    if (e.target.closest('.gallery-nav') || e.target.closest('.gallery-dots')) return;
+    nextImage();
   });
 
-  // Obsługa klawiatury
   card.tabIndex = 0;
   card.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') nextImage();

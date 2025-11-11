@@ -1,93 +1,184 @@
+/* === GŁÓWNY KONTENER === */
 .details-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2em;
   max-width: 900px;
   margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
+@media (max-width: 768px) {
+  .details-container {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+}
+
+/* === GALERIA === */
 .details-gallery {
+  text-align: center;
+}
+
+#mainImage {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border: 1px solid #333;
+}
+
+/* === INFORMACJE === */
+.details-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.details-gallery img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 1em;
-  object-fit: cover;
-}
-
-.details-info {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 1.5em;
-  width: 100%;
+  gap: 1rem;
 }
 
 .details-info h2 {
-  text-align: center;
-  margin-bottom: 1em;
+  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+  color: #fff;
 }
 
-.tags {
-  margin-top: 1em;
+.details-info p {
+  margin: 0.4rem 0;
+  color: #ddd;
+  line-height: 1.5;
+}
+
+.details-info strong {
+  color: #fff;
+}
+
+/* === PASEK WARIANTÓW POD NAZWĄ === */
+.variant-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em;
+  gap: 1rem;
+  margin: 0.8rem 0 1.5rem;
+  padding: 0.9rem 1.2rem;
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border-radius: 12px;
+  border: 1px solid #333;
+  font-size: 0.95rem;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.variant-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ccc;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.variant-item strong {
+  color: #fff;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.variant-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.icon-sides { fill: #4a9eff; }
+.icon-top { fill: #ff6b6b; }
+.icon-bangs { fill: #ffd93d; }
+
+/* === PRZEŁĄCZNIKI WARIANTÓW === */
+.variant-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #111;
+  border-radius: 10px;
+  border: 1px solid #333;
   justify-content: center;
 }
 
-.tag {
-  background: #333;
-  padding: 0.3em 0.8em;
-  border-radius: 6px;
-  font-size: 0.85em;
+.variant-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 130px;
 }
 
-.variant-section {
-  text-align: center;
-  margin-top: 1.5em;
+.variant-group label {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-.variant-section select {
-  margin-top: 0.5em;
-  padding: 0.5em 1em;
-  border-radius: 6px;
-  background: #111;
-  color: #fff;
-  border: 1px solid #333;
+.variant-group select {
+  padding: 0.6rem;
+  background: #1a1a1a;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
+.variant-group select:focus {
+  outline: none;
+  border-color: #666;
+  background: #222;
+}
+
+/* === PRZYCISK POWROTU === */
 .back-btn {
-  margin-top: 2em;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.8rem;
   background: #222;
   color: #fff;
   border: 1px solid #444;
-  padding: 0.6em 1.2em;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s;
+  align-self: center;
 }
 
 .back-btn:hover {
   background: #333;
+  border-color: #666;
+  transform: translateY(-1px);
 }
 
-/* === Placeholder - wyszarzony i rozmyty === */
-.details-gallery img[src*="haircut.jpg"] {
+/* === DOMYŚLNE ZDJĘCIE === */
+#mainImage[src*="haircut.jpg"] {
   filter: grayscale(100%) blur(3px) brightness(0.6);
-  transform: scale(1.02);
-  opacity: 0.85;
-  transition: all 0.3s ease;
+  opacity: 0.8;
 }
 
-/* Subtelny efekt hover - tylko dla estetyki */
-.details-gallery img[src*="haircut.jpg"]:hover {
-  filter: grayscale(100%) blur(2px) brightness(0.7);
-  opacity: 0.9;
+/* === OPIS WARIANTU POD ZDJĘCIEM === */
+.variant-desc {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #aaa;
+  font-style: italic;
+  text-align: center;
+  padding: 0.6rem 1rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  display: none;
 }

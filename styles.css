@@ -1,226 +1,429 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
-
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #0d0d0d;
-  color: #f5f5f5;
+/* === RESET & BASIC === */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0a0a0a;
+  color: #f5f5f5;
   line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 130px; /* dla fixed headera */
+  margin: 0;
 }
 
-/* Header */
-header {
-  text-align: center;
-  padding: 2em 1em;
-  border-bottom: 1px solid #333;
-  background-color: #111;
-}
-
-header h1 {
+/* === TYPOGRAFIA === */
+h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
-  font-size: 2rem;
-  letter-spacing: 1px;
+  color: #fff;
+  margin-bottom: 0.8rem;
 }
 
-/* Filters */
-.filters {
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.4rem; }
+h4 { font-size: 1.2rem; }
+
+p {
+  margin: 0.6rem 0;
+  color: #ddd;
+  font-size: 1rem;
+}
+
+/* === LINKI === */
+a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover { color: #aaa; }
+
+/* === HEADER & NAV (fixed + chowające się) === */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #111;
+  border-bottom: 1px solid #333;
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(0);
+  backdrop-filter: blur(8px);
+}
+
+header.hidden {
+  transform: translateY(-100%);
+}
+
+.top-nav {
   display: flex;
   justify-content: center;
+  gap: 2rem;
+  margin-bottom: 0.8rem;
   flex-wrap: wrap;
-  gap: 1em;
-  padding: 1em 0;
-  background-color: #111;
-  border-bottom: 1px solid #222;
 }
 
-select {
-  padding: 0.6em 1em;
-  border: 1px solid #444;
-  background: #1a1a1a;
-  color: #f5f5f5;
-  font-size: 1em;
+.nav-link {
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
-  transition: background 0.2s, color 0.2s, border 0.2s;
+  transition: all 0.2s;
 }
 
-select:hover,
-select:focus {
+.nav-link.active,
+.nav-link:hover {
   background: #222;
-  border-color: #666;
-  outline: none;
+  color: #fff;
 }
 
-/* Grid Layout */
+/* === MAIN === */
+main {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* === GRID KATALOGU === */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5em;
-  padding: 2em;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.8rem;
+  padding: 1rem 0;
 }
 
-/* Hairstyle Cards */
+/* === KARTA FRYZURY === */
 .card {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
+  background: #111;
+  border-radius: 14px;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid #333;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.4);
+  border-color: #555;
 }
 
-/* === KWADRATOWA GALERIA === */
+/* === GALERIA – KWADRATOWA Z PRZYCIĘCIEM === */
 .card .gallery {
   position: relative;
   width: 100%;
-  padding-bottom: 100%; /* 1:1 – kwadrat */
+  padding-top: 100%;
   overflow: hidden;
+  background: #0a0a0a;
   border-bottom: 1px solid #333;
-  background: #111;
 }
 
 .card .gallery img {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  user-select: none;
-  -webkit-user-drag: none;
-  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
-.card .gallery img.active {
-  opacity: 1;
+.card .gallery img:hover {
+  transform: scale(1.05);
 }
 
-/* Ukryte strzałki i kropki – tylko po hover */
-.card .gallery-nav,
-.card .gallery-dots {
-  opacity: 0;
-  transition: opacity 0.25s ease;
+.card .gallery img[src*="haircut.jpg"] {
+  filter: grayscale(100%) brightness(0.6);
+  opacity: 0.8;
 }
 
-.card:hover .gallery-nav,
-.card:hover .gallery-dots {
-  opacity: 1;
-}
-
-/* Strzałki */
-.card .gallery-nav {
+/* === NAWIGACJA GALERII === */
+.gallery-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
   border: none;
-  width: 38px;
-  height: 38px;
+  width: 36px; height: 36px;
   border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 1.3rem;
-  z-index: 10;
+  z-index: 2;
   backdrop-filter: blur(4px);
+  transition: all 0.2s;
 }
 
-.card .gallery-nav:hover {
-  background: rgba(0, 0, 0, 0.9);
+.gallery-nav:hover {
+  background: rgba(0,0,0,0.8);
+  transform: translateY(-50%) scale(1.1);
 }
 
-.card .gallery-nav.prev { left: 12px; }
-.card .gallery-nav.next { right: 12px; }
+.gallery-nav.prev { left: 10px; }
+.gallery-nav.next { right: 10px; }
 
-/* Kropki */
-.card .gallery-dots {
+.gallery-dots {
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 7px;
-  z-index: 10;
+  gap: 6px;
+  z-index: 2;
 }
 
-.card .gallery-dots .dot {
-  width: 9px;
-  height: 9px;
-  background: rgba(255, 255, 255, 0.5);
+.gallery-dots .dot {
+  width: 8px; height: 8px;
+  background: #555;
   border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
-.card .gallery-dots .dot.active {
+.gallery-dots .dot.active {
   background: #fff;
-  transform: scale(1.3);
+  width: 10px; height: 10px;
 }
 
-/* Swipe feedback */
-.card .gallery.swiping {
-  cursor: grabbing;
-}
-
-/* Tekst w karcie */
+/* === TREŚĆ KARTY === */
 .card h3 {
-  margin: 1em 0 0.4em;
-  font-size: 1.2em;
-  font-weight: 500;
-  text-align: center;
-}
-
-.card p {
-  font-size: 0.9em;
-  color: #ccc;
-  text-align: center;
-  margin: 0.3em 0;
-}
-
-.card strong {
+  padding: 1rem 1rem 0.4rem;
+  font-size: 1.3rem;
   color: #fff;
 }
 
-/* Footer */
+.card p {
+  padding: 0 1rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.card p strong { color: #fff; }
+
+/* === PRZYCISKI === */
+.back-btn, .save-btn {
+  margin: 1.5rem auto 1rem;
+  padding: 0.8rem 2rem;
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: block;
+}
+
+.back-btn:hover, .save-btn:hover {
+  background: #333;
+  border-color: #666;
+  transform: translateY(-1px);
+}
+
+/* === FILTRY === */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  justify-content: center;
+  padding: 1rem;
+  background: #111;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.filters select {
+  padding: 0.7rem 1rem;
+  background: #1a1a1a;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 160px;
+}
+
+/* === FOOTER === */
 footer {
   text-align: center;
-  padding: 1.5em;
-  font-size: 0.9em;
-  color: #777;
-  border-top: 1px solid #222;
-  background-color: #0d0d0d;
+  padding: 1.5rem;
+  background: #111;
+  border-top: 1px solid #333;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-top: auto;
 }
 
-/* Subtle Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* === DETAILS PAGE === */
+.details-gallery {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #333;
+#mainImage {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  border: 1px solid #333;
+  transition: opacity 0.3s ease;
+}
+
+.variant-desc {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #aaa;
+  font-style: italic;
+  text-align: center;
+  padding: 0.6rem 1rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  display: none;
+}
+
+.details-info {
+  background: #111;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+/* === BUILDER PAGE === */
+.builder-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #111;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.control-group h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.control-group select {
+  width: 100%;
+  padding: 0.7rem;
+  background: #1a1a1a;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.result {
+  text-align: center;
+  padding: 1.5rem;
+  background: #111;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+#resultCard {
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #333;
+  max-width: 320px;
+  margin: 1rem auto;
+}
+
+#resultCard h4 {
+  margin: 0.5rem 0;
+  color: #fff;
+  font-size: 1.3rem;
+}
+
+#resultCard p {
+  margin: 0.4rem 0;
+  color: #ddd;
+  font-size: 0.95rem;
+}
+
+#previewContainer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 280px;
+  margin: 1rem auto;
+}
+
+#previewImg {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
   border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  border: 1px solid #333;
+  transition: opacity 0.3s ease;
+  opacity: 1;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+#loadingSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  backdrop-filter: blur(4px);
+  display: none;
 }
 
-/* === Domyślne zdjęcie na karcie – wyszarzone i rozmyte === */
-.card .gallery img[src*="haircut.jpg"] {
-  filter: grayscale(100%) blur(3px) brightness(0.6);
-  transform: scale(1.02);
-  opacity: 0.85;
-  transition: all 0.3s ease;
+.variant-desc-small {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: #aaa;
+  font-style: italic;
+  text-align: center;
+  padding: 0 0.5rem;
+  display: none;
 }
 
-.card .gallery img[src*="haircut.jpg"]:hover {
-  filter: grayscale(100%) blur(2px) brightness(0.7);
-  opacity: 0.9;
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  body { padding-top: 110px; }
+  .grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .top-nav { gap: 1rem; font-size: 0.95rem; }
+  h1 { font-size: 1.8rem; }
+  .filters { flex-direction: column; align-items: stretch; }
+  .filters select { min-width: auto; }
+  .builder-container { grid-template-columns: 1fr; }
 }

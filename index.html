@@ -8,6 +8,10 @@
 </head>
 <body>
   <header>
+    <nav class="top-nav">
+      <a href="index.html" class="nav-link active">Katalog fryzur</a>
+      <a href="builder.html" class="nav-link">Wybierz swoją fryzurę</a>
+    </nav>
     <h1>Katalog fryzur męskich</h1>
   </header>
 
@@ -40,11 +44,37 @@
     </select>
   </section>
 
-<main id="hairstyleContainer" class="grid"></main>
+  <main id="hairstyleContainer" class="grid"></main>
+
   <footer>
     <p>© 2025 Katalog Fryzur Męskich</p>
   </footer>
 
+  <!-- Skrypt katalogu -->
   <script src="script.js"></script>
+
+  <!-- Skrypt chowającego się menu -->
+  <script>
+    // === CHOWAJ MENU PRZY SCROLLU W DÓŁ ===
+    let lastScroll = 0;
+    const header = document.querySelector('header');
+    const headerHeight = header.offsetHeight;
+
+    window.addEventListener('load', () => {
+      lastScroll = window.pageYOffset;
+
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > lastScroll && currentScroll > headerHeight) {
+          header.classList.add('hidden');
+        } else if (currentScroll < lastScroll) {
+          header.classList.remove('hidden');
+        }
+
+        lastScroll = currentScroll;
+      });
+    });
+  </script>
 </body>
 </html>

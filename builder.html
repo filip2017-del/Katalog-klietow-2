@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wybierz swoją fryzurę</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="builder.css" />
+</head>
+<body>
+  <header>
+    <nav class="top-nav">
+      <a href="index.html" class="nav-link">Katalog fryzur</a>
+      <a href="builder.html" class="nav-link active">Wybierz swoją fryzurę</a>
+    </nav>
+    <h1>Wybierz swoją fryzurę</h1>
+  </header>
+
+  <main class="builder-container">
+    <!-- Kreator -->
+    <section class="controls">
+      <div class="control-group">
+        <h3>Boki</h3>
+        <select id="bokiSelect">
+          <option value="">Dowolne</option>
+          <option value="taper">Taper</option>
+          <option value="low fade">Low Fade</option>
+          <option value="mid fade">Mid Fade</option>
+          <option value="high fade">High Fade</option>
+          <option value="burst fade">Burst Fade</option>
+          <option value="undercut">Undercut</option>
+          <option value="średnie">Średnie boki</option>
+          <option value="długie">Długie boki</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <h3>Góra</h3>
+        <select id="goraSelect">
+          <option value="">Dowolna</option>
+          <option value="krótka">Krótka</option>
+          <option value="luźna">Luźna</option>
+          <option value="klasyczna">Klasyczna</option>
+          <option value="długa">Długa</option>
+          <option value="tekstura">Z teksturą</option>
+          <option value="quiff">Quiff</option>
+          <option value="pompadour">Pompadour</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <h3>Grzywka</h3>
+        <select id="grzywkaSelect">
+          <option value="">Dowolna</option>
+          <option value="brak">Bez grzywki</option>
+          <option value="prosta">Prosta</option>
+          <option value="curtain">Curtain</option>
+          <option value="tekstura">Teksturowana</option>
+          <option value="side">Z boku</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <h3>Styl</h3>
+        <select id="styleSelect">
+          <option value="">Dowolny</option>
+          <option value="klasyczny">Klasyczny</option>
+          <option value="nowoczesny">Nowoczesny</option>
+          <option value="sportowy">Sportowy</option>
+          <option value="retro">Retro</option>
+          <option value="naturalny">Naturalny</option>
+          <option value="alternatywny">Alternatywny</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Wynik -->
+    <section class="result" id="resultSection" style="display: none;">
+      <h3>Najlepsze dopasowanie:</h3>
+      <div id="resultCard" class="card" style="max-width: 320px; margin: 1rem auto;">
+        <div id="previewContainer">
+          <img id="previewImg" src="./images/haircut.jpg" alt="Podgląd" loading="lazy">
+          <div id="loadingSpinner">Ładowanie...</div>
+        </div>
+        <h4 id="resultName"></h4>
+        <p id="resultDesc"></p>
+        <p id="variantDesc" style="font-style: italic; color: #aaa; margin-top: 0.5rem; display: none;"></p>
+      </div>
+      <button id="viewDetailsBtn" class="save-btn">Zobacz szczegóły</button>
+      <p id="noMatch" style="display: none; color: #aaa; text-align: center;">Brak idealnego dopasowania. Spróbuj zmienić opcje.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Katalog Fryzur Męskich</p>
+  </footer>
+
+  <script src="builder.js"></script>
+</body>
+</html>
