@@ -1,0 +1,93 @@
+.details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.details-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.details-gallery img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1em;
+  object-fit: cover;
+}
+
+.details-info {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 1.5em;
+  width: 100%;
+}
+
+.details-info h2 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.tags {
+  margin-top: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: center;
+}
+
+.tag {
+  background: #333;
+  padding: 0.3em 0.8em;
+  border-radius: 6px;
+  font-size: 0.85em;
+}
+
+.variant-section {
+  text-align: center;
+  margin-top: 1.5em;
+}
+
+.variant-section select {
+  margin-top: 0.5em;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.back-btn {
+  margin-top: 2em;
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.back-btn:hover {
+  background: #333;
+}
+
+/* === Placeholder - wyszarzony i rozmyty === */
+.details-gallery img[src*="haircut.jpg"] {
+  filter: grayscale(100%) blur(3px) brightness(0.6);
+  transform: scale(1.02);
+  opacity: 0.85;
+  transition: all 0.3s ease;
+}
+
+/* Subtelny efekt hover - tylko dla estetyki */
+.details-gallery img[src*="haircut.jpg"]:hover {
+  filter: grayscale(100%) blur(2px) brightness(0.7);
+  opacity: 0.9;
+}

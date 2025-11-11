@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Katalog fryzur męskich</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Katalog fryzur męskich</h1>
+  </header>
+
+  <section class="filters">
+    <select id="lengthFilter">
+      <option value="">Długość włosów</option>
+      <option value="krótkie">Krótkie</option>
+      <option value="średnie">Średnie</option>
+      <option value="długie">Długie</option>
+    </select>
+
+    <select id="styleFilter">
+      <option value="">Styl</option>
+      <option value="klasyczny">Klasyczny</option>
+      <option value="nowoczesny">Nowoczesny</option>
+      <option value="sportowy">Sportowy</option>
+      <option value="alternatywny">Alternatywny</option>
+      <option value="retro">Retro</option>
+      <option value="naturalny">Naturalny</option>
+      <option value="wojskowy">Wojskowy</option>
+    </select>
+
+    <select id="faceFilter">
+      <option value="">Kształt twarzy</option>
+      <option value="owalna">Owalna</option>
+      <option value="okrągła">Okrągła</option>
+      <option value="kwadratowa">Kwadratowa</option>
+      <option value="trójkątna">Trójkątna</option>
+      <option value="diamentowa">Diamentowa</option>
+    </select>
+  </section>
+
+<main id="hairstyleContainer" class="grid"></main>
+  <footer>
+    <p>© 2025 Katalog Fryzur Męskich</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
