@@ -23,5 +23,28 @@
   </footer>
 
   <script src="details.js"></script>
+   <!-- Skrypt chowającego się menu -->
+  <script>
+    // === CHOWAJ MENU PRZY SCROLLU W DÓŁ ===
+    let lastScroll = 0;
+    const header = document.querySelector('header');
+    const headerHeight = header.offsetHeight;
+
+    window.addEventListener('load', () => {
+      lastScroll = window.pageYOffset;
+
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > lastScroll && currentScroll > headerHeight) {
+          header.classList.add('hidden');
+        } else if (currentScroll < lastScroll) {
+          header.classList.remove('hidden');
+        }
+
+        lastScroll = currentScroll;
+      });
+    });
+  </script>
 </body>
 </html>
