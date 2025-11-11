@@ -18,7 +18,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 130px; /* dla fixed headera */
+  padding-top: 130px;
   margin: 0;
 }
 
@@ -40,16 +40,16 @@ p {
   font-size: 1rem;
 }
 
-/* === LINKI === */
+/* === LINKI – ZAWSZE BIAŁE === */
 a {
   color: #fff;
   text-decoration: none;
   transition: color 0.2s;
 }
 
-a:hover { color: #aaa; }
+a:hover { color: #ccc; }
 
-/* === HEADER & NAV (fixed + chowające się) === */
+/* === HEADER & NAV – FIXED + CHOWAJĄCE SIĘ === */
 header {
   position: fixed;
   top: 0;
@@ -83,12 +83,18 @@ header.hidden {
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
   transition: all 0.2s;
+  color: #fff !important;
 }
 
 .nav-link.active,
 .nav-link:hover {
   background: #222;
-  color: #fff;
+  color: #fff !important;
+}
+
+.nav-link.active {
+  background: #333 !important;
+  font-weight: 600;
 }
 
 /* === MAIN === */
@@ -404,16 +410,6 @@ footer {
   border-radius: 8px;
   font-size: 0.9rem;
   backdrop-filter: blur(4px);
-  display: none;
-}
-
-.variant-desc-small {
-  margin: 0.5rem 0 0;
-  font-size: 0.8rem;
-  color: #aaa;
-  font-style: italic;
-  text-align: center;
-  padding: 0 0.5rem;
   display: none;
 }
 
