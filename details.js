@@ -1,13 +1,8 @@
-// details.js
+// === details.js (oczyszczony + poprawione tłumaczenia wariantów) ===
 document.addEventListener("DOMContentLoaded", async () => {
-  // Czekamy na załadowanie lang.js
   if (typeof updateLanguage !== "function") {
-    console.warn("lang.js nie załadowany – czekam...");
     await new Promise(resolve => {
-      const check = () => {
-        if (typeof updateLanguage === "function") resolve();
-        else setTimeout(check, 50);
-      };
+      const check = () => (typeof updateLanguage === "function" ? resolve() : setTimeout(check, 50));
       check();
     });
   }
@@ -16,18 +11,65 @@ document.addEventListener("DOMContentLoaded", async () => {
   const item = JSON.parse(localStorage.getItem("selectedHairstyle"));
 
   if (!item) {
-    container.innerHTML = "<p style='text-align:center; color:#aaa;'>Nie znaleziono danych fryzury.</p>";
+    container.innerHTML = `<p style='text-align:center; color:#aaa;'>${t("builder_no_match")}</p>`;
     return;
   }
 
-  // === 1. Warianty z images ===
+  // --- mapy tłumaczeń wartości
+  const valueTranslationMap = {
+    length: { "krótkie": "filter_short", "średnie": "filter_medium", "długie": "filter_long" },
+    style: {
+      "klasyczny": "filter_classic", "nowoczesny": "filter_modern", "sportowy": "filter_sport",
+      "alternatywny": "filter_alternative", "retro": "filter_retro",
+      "naturalny": "filter_natural", "wojskowy": "filter_military", "casual": "filter_natural"
+    },
+    face: {
+      "owalna": "filter_oval", "okrągła": "filter_round", "kwadratowa": "filter_square",
+      "trójkątna": "filter_triangle", "diamentowa": "filter_diamond"
+    },
+    hairType: { "proste": "hair_straight", "falowane": "hair_wavy", "kręcone": "hair_curly" },
+    variant: {
+      "brak": "variant_none",
+      "side": "variant_side",
+      "bok": "variant_side",
+      "curtain": "variant_curtain",
+      "kurtyna": "variant_curtain",
+      "tekstura": "variant_textured",
+      "teksturalna": "variant_textured",
+      "luźna": "variant_loose",
+      "luźne": "variant_loose",
+      "high fade": "variant_high_fade",
+      "wysoki fade": "variant_high_fade",
+      "undercut": "variant_undercut"
+    }
+  };
+
+  // --- poprawiona funkcja tłumaczenia (niezależna od wielkości liter)
+  function translateValue(value, kind) {
+    if (!value) return value;
+    const map = valueTranslationMap[kind];
+    if (!map) return value;
+    const normalize = v => v.toString().trim().toLowerCase();
+    if (Array.isArray(value)) {
+      return value.map(v => {
+        const key = normalize(v);
+        return map[key] ? t(map[key]) : v;
+      }).join(", ");
+    }
+    const key = normalize(value);
+    return map[key] ? t(map[key]) : value;
+  }
+
+  // --- tłumaczenia tekstowe
+  const nameText = typeof item.name === "object" ? (item.name[currentLang] || item.name.pl) : item.name;
+  const descText = typeof item.description === "object" ? (item.description[currentLang] || item.description.pl) : item.description;
+
+  // --- warianty fryzur
   const variants = Object.keys(item.images || {}).map(key => {
     const [boki, gora, grzywka] = key.split("_");
     const data = item.images[key];
     return {
-      boki,
-      gora,
-      grzywka,
+      boki, gora, grzywka,
       src: typeof data === "string" ? data : data.src,
       desc: typeof data === "object" ? data.desc : null
     };
@@ -37,85 +79,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     variants.push({ boki: item.boki, gora: item.gora, grzywka: item.grzywka, src: "./images/haircut.jpg" });
   }
 
-  // === 2. Unikalne opcje ===
-  const unique = (arr) => [...new Set(arr)];
+  const unique = arr => [...new Set(arr)];
   const bokiOptions = unique(variants.map(v => v.boki));
   const goraOptions = unique(variants.map(v => v.gora));
   const grzywkaOptions = unique(variants.map(v => v.grzywka));
 
-  // === 3. Domyślny wariant ===
   const defaultKey = `${item.boki}_${item.gora}_${item.grzywka}`;
   const defaultVariant = variants.find(v => `${v.boki}_${v.gora}_${v.grzywka}` === defaultKey) || variants[0];
 
-  // === 4. HTML ===
+  // --- generowanie HTML
   container.innerHTML = `
     <section class="details-gallery">
-      <img id="mainImage" src="${defaultVariant.src}" alt="${item.name}" loading="lazy">
+      <img id="mainImage" src="${defaultVariant.src}" alt="${nameText}" loading="lazy">
       <p id="variantDesc" class="variant-desc"></p>
     </section>
 
     <section class="details-info">
-      <h2 data-key="item_name">${item.name}</h2>
-
-      <div class="variant-bar" id="variantBar"></div>
+      <h2>${nameText}</h2>
       <div class="variant-controls" id="variantControls"></div>
 
-      <p><strong data-key="details_length">Długość:</strong> <span data-key="length_value">${item.length}</span></p>
-      <p><strong data-key="details_style">Styl:</strong> <span data-key="style_value">${item.style}</span></p>
-      <p><strong puffed data-key="details_face">Kształt twarzy:</strong> <span data-key="face_value">${item.faceShapes?.join(", ") || "—"}</span></p>
-      <p><strong data-key="details_hair">Typ włosów:</strong> <span data-key="hair_value">${item.hairType?.join(", ") || "—"}</span></p>
-      <p data-key="item_desc">${item.description}</p>
+      <p><strong data-key="details_length">${t("details_length")}</strong> ${translateValue(item.length, "length")}</p>
+      <p><strong data-key="details_style">${t("details_style")}</strong> ${translateValue(item.style, "style")}</p>
+      <p><strong data-key="details_face">${t("details_face")}</strong> ${translateValue(item.faceShapes || [], "face")}</p>
+      <p><strong data-key="details_hair">${t("details_hair")}</strong> ${translateValue(item.hairType || [], "hairType")}</p>
+      <p>${descText}</p>
 
-      <button id="backBtn" class="back-btn" data-key="back_button">Powrót do katalogu</button>
+      <button id="backBtn" class="back-btn" data-key="back_button">${t("back_button")}</button>
     </section>
   `;
 
-  // === 5. Pasek wariantów ===
-  const variantBar = document.getElementById("variantBar");
-  const items = [];
-
-  if (bokiOptions.length > 1) {
-    items.push(`
-      <div class="variant-item">
-        <svg class="variant-icon icon-sides" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 0h4v16h-4V4zm6 0h4v16h-4V4z"/></svg>
-        <span><strong>${item.boki}</strong> boki</span>
-      </div>
-    `);
-  }
-
-  if (goraOptions.length > 1) {
-    items.push(`
-      <div class="variant-item">
-        <svg class="variant-icon icon-top" viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h14v-8h3L12 2z"/></svg>
-        <span><strong>${item.gora}</strong> góra</span>
-      </div>
-    `);
-  }
-
-  if (grzywkaOptions.length > 1) {
-    items.push(`
-      <div class="variant-item">
-        <svg class="variant-icon icon-bangs" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-1.66 0-3 1.34-3 3h2c0-.55.45-1 1-1s1 .45 1 1h2c0-1.66-1.34-3-3-3z"/></svg>
-        <span><strong>${item.grzywka}</strong> grzywka</span>
-      </div>
-    `);
-  }
-
-  if (items.length === 0) {
-    variantBar.style.display = "none";
-  } else {
-    variantBar.innerHTML = items.join("");
-  }
-
-  // === 6. Selecty ===
+  // --- selektory wariantów
   const controls = document.getElementById("variantControls");
   const selectHTML = [];
 
   if (bokiOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label data-key="builder_sides">Boki</label>
-        <select id="bokiSelect">${bokiOptions.map(o => `<option value="${o}">${o}</option>`).join("")}</select>
+        <label>${t("builder_sides")}</label>
+        <select id="bokiSelect">
+          ${bokiOptions.map(o => `<option value="${o}">${translateValue(o, "variant")}</option>`).join("")}
+        </select>
       </div>
     `);
   }
@@ -123,8 +126,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (goraOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label data-key="builder_top">Góra</label>
-        <select id="goraSelect">${goraOptions.map(o => `<option value="${o}">${o}</option>`).join("")}</select>
+        <label>${t("builder_top")}</label>
+        <select id="goraSelect">
+          ${goraOptions.map(o => `<option value="${o}">${translateValue(o, "variant")}</option>`).join("")}
+        </select>
       </div>
     `);
   }
@@ -132,45 +137,41 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (grzywkaOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label data-key="builder_bangs">Grzywka</label>
-        <select id="grzywkaSelect">${grzywkaOptions.map(o => `<option value="${o}">${o}</option>`).join("")}</select>
+        <label>${t("builder_bangs")}</label>
+        <select id="grzywkaSelect">
+          ${grzywkaOptions.map(o => `<option value="${o}">${translateValue(o, "variant")}</option>`).join("")}
+        </select>
       </div>
     `);
   }
 
-  if (selectHTML.length > 0) {
-    controls.innerHTML = selectHTML.join("");
-    if (bokiOptions.length > 1) document.getElementById("bokiSelect").value = defaultVariant.boki;
-    if (goraOptions.length > 1) document.getElementById("goraSelect").value = defaultVariant.gora;
-    if (grzywkaOptions.length > 1) document.getElementById("grzywkaSelect").value = defaultVariant.grzywka;
-  } else {
-    controls.style.display = "none";
-  }
+  controls.innerHTML = selectHTML.join("");
+  if (selectHTML.length === 0) controls.style.display = "none";
 
-  // === 7. Aktualizacja obrazu + opis ===
+  if (bokiOptions.length > 1) document.getElementById("bokiSelect").value = defaultVariant.boki;
+  if (goraOptions.length > 1) document.getElementById("goraSelect").value = defaultVariant.gora;
+  if (grzywkaOptions.length > 1) document.getElementById("grzywkaSelect").value = defaultVariant.grzywka;
+
+  // --- aktualizacja obrazu
   const descEl = document.getElementById("variantDesc");
-
   function updateImage() {
     const boki = document.getElementById("bokiSelect")?.value || item.boki;
     const gora = document.getElementById("goraSelect")?.value || item.gora;
     const grzywka = document.getElementById("grzywkaSelect")?.value || item.grzywka;
-
     const key = `${boki}_${gora}_${grzywka}`;
     const variant = variants.find(v => `${v.boki}_${v.gora}_${v.grzywka}` === key) || variants[0];
-    const src = variant.src;
-    const desc = variant.desc;
 
     const img = document.getElementById("mainImage");
-    if (img.src !== src) {
+    if (img.src !== variant.src) {
       img.style.opacity = 0;
       setTimeout(() => {
-        img.src = src;
+        img.src = variant.src;
         img.style.opacity = 1;
-      }, 200);
+      }, 150);
     }
 
-    if (desc) {
-      descEl.textContent = desc;
+    if (variant.desc) {
+      descEl.textContent = variant.desc;
       descEl.style.display = "block";
     } else {
       descEl.style.display = "none";
@@ -183,21 +184,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   updateImage();
+  document.getElementById("backBtn").addEventListener("click", () => window.location.href = "index.html");
 
-  // === 8. Powrót ===
-  document.getElementById("backBtn").addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
-
-  // === 9. Wywołaj tłumaczenie po załadowaniu ===
+  await new Promise(r => setTimeout(r, 50));
   updateLanguage();
-
-  // === 10. Przełączniki języka ===
-  document.querySelectorAll(".lang-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      setLanguage(btn.dataset.lang);
-      // Ponowne tłumaczenie po zmianie języka
-      setTimeout(updateLanguage, 50);
-    });
-  });
 });

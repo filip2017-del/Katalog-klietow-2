@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <script src="lang.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Szczegóły fryzury</title>
+  <meta name="description" content="Szczegóły fryzur męskich – zobacz warianty, długość i styl.">
+  <title data-key="page_title">Szczegóły fryzury</title>
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="details.css" />
+
+  <script src="lang.js" defer></script>
 </head>
 <body>
   <header>
-    
     <div class="lang-switch">
-  <button class="lang-btn active" data-lang="pl">PL</button>
-  <button class="lang-btn" data-lang="en">EN</button>
-  <button class="lang-btn" data-lang="ua">UA</button>
-  </div>
+      <button class="lang-btn active" data-lang="pl">PL</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ua">UA</button>
+    </div>
+
     <nav class="top-nav">
-    <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog fryzur</a>
-    <a href="builder.html" class="nav-link" data-key="nav_builder">Wybierz swoją fryzurę</a>
-  </nav>
+      <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog fryzur</a>
+      <a href="builder.html" class="nav-link" data-key="nav_builder">Wybierz swoją fryzurę</a>
+    </nav>
   </header>
 
   <main id="detailsContainer" class="details-container"></main>
 
   <footer>
-    <p>© 2025 Katalog Fryzur Męskich</p>
+    <p data-key="footer">© 2025 Katalog Fryzur Męskich</p>
   </footer>
 
   <script src="details.js"></script>
-  <!-- Skrypt chowającego się menu -->
+
   <script>
+    // Ukrywanie nagłówka przy przewijaniu
     let lastScroll = 0;
     const header = document.querySelector('header');
     const headerHeight = header.offsetHeight;
 
     window.addEventListener('load', () => {
       lastScroll = window.pageYOffset;
-
       window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-
         if (currentScroll > lastScroll && currentScroll > headerHeight) {
           header.classList.add('hidden');
         } else if (currentScroll < lastScroll) {
           header.classList.remove('hidden');
         }
-
         lastScroll = currentScroll;
       });
     });
