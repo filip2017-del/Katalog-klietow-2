@@ -1,4 +1,5 @@
-// lang.js
+// === lang.js (z rozszerzeniami dla typów włosów/wariantów) ===
+
 const translations = {
   pl: {
     nav_catalog: "Katalog fryzur",
@@ -33,10 +34,21 @@ const translations = {
     builder_bangs: "Grzywka",
     builder_style: "Styl",
     builder_match: "Najlepsze dopasowanie:",
-    builder_no_match: "Brak idealnego dopasowania. Spróbuj zmienić opcje.",
+    builder_no_match: "Brak fryzur spełniających kryteria.",
     builder_view_details: "Zobacz szczegóły",
     loading: "Ładowanie...",
-    footer: "© 2025 Katalog Fryzur Męskich"
+    footer: "© 2025 Katalog Fryzur Męskich",
+    // --- nowe klucze dla typów włosów i wariantów (używane przez script/details)
+    hair_straight: "Proste",
+    hair_wavy: "Falowane",
+    hair_curly: "Kręcone",
+    variant_none: "Brak",
+    variant_side: "Z boku",
+    variant_curtain: "Curtain",
+    variant_textured: "Z teksturą",
+    variant_loose: "Luźna",
+    variant_high_fade: "High Fade",
+    variant_undercut: "Undercut"
   },
   en: {
     nav_catalog: "Hairstyle Catalog",
@@ -71,10 +83,21 @@ const translations = {
     builder_bangs: "Bangs",
     builder_style: "Style",
     builder_match: "Best Match:",
-    builder_no_match: "No perfect match. Try different options.",
+    builder_no_match: "No hairstyles found for selected filters.",
     builder_view_details: "View Details",
     loading: "Loading...",
-    footer: "© 2025 Men's Hairstyle Catalog"
+    footer: "© 2025 Men's Hairstyle Catalog",
+    // --- nowe klucze
+    hair_straight: "Straight",
+    hair_wavy: "Wavy",
+    hair_curly: "Curly",
+    variant_none: "No bangs",
+    variant_side: "Side",
+    variant_curtain: "Curtain",
+    variant_textured: "Textured",
+    variant_loose: "Loose",
+    variant_high_fade: "High Fade",
+    variant_undercut: "Undercut"
   },
   ua: {
     nav_catalog: "Каталог зачісок",
@@ -109,10 +132,21 @@ const translations = {
     builder_bangs: "Чубчик",
     builder_style: "Стиль",
     builder_match: "Найкращий збіг:",
-    builder_no_match: "Немає ідеального збігу. Спробуйте інші опції.",
+    builder_no_match: "Не знайдено зачісок за обраними фільтрами.",
     builder_view_details: "Переглянути деталі",
     loading: "Завантаження...",
-    footer: "© 2025 Каталог чоловічих зачісок"
+    footer: "© 2025 Каталог чоловічих зачісок",
+    // --- nowe klucze
+    hair_straight: "Пряме",
+    hair_wavy: "Хвилясте",
+    hair_curly: "Кучеряве",
+    variant_none: "Без чубчика",
+    variant_side: "На бік",
+    variant_curtain: "Curtain",
+    variant_textured: "З текстурою",
+    variant_loose: "Розпущена",
+    variant_high_fade: "High Fade",
+    variant_undercut: "Undercut"
   }
 };
 
@@ -128,79 +162,56 @@ function setLanguage(lang) {
     localStorage.setItem("lang", lang);
     document.documentElement.lang = lang;
     updateLanguage();
-    if (typeof reloadContent === "function") reloadContent();
+    if (typeof reloadContent === "function") reloadContent(lang);
   }
 }
 
 function updateLanguage() {
-  // Aktualizacja wszystkich elementów z data-key
   document.querySelectorAll("[data-key]").forEach(el => {
     const key = el.getAttribute("data-key");
-    if (translations[currentLang][key]) {
-      el.textContent = translations[currentLang][key];
-    }
+    if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
   });
 
-  // Opcje w <select>
-  document.querySelectorAll("select option").forEach(opt => {
-    const value = opt.value;
-    const langMap = {
-      "": "filter_any",
-      "krótkie": "filter_short",
-      "średnie": "filter_medium",
-      "długie": "filter_long",
-      "klasyczny": "filter_classic",
-      "nowoczesny": "filter_modern",
-      "sportowy": "filter_sport",
-      "alternatywny": "filter_alternative",
-      "retro": "filter_retro",
-      "naturalny": "filter_natural",
-      "wojskowy": "filter_military",
-      "owalna": "filter_oval",
-      "okrągła": "filter_round",
-      "kwadratowa": "filter_square",
-      "trójkątna": "filter_triangle",
-      "diamentowa": "filter_diamond",
-      "taper": currentLang === "pl" ? "Taper" : currentLang === "en" ? "Taper" : "Тейпер",
-      "low fade": currentLang === "pl" ? "Low Fade" : currentLang === "en" ? "Low Fade" : "Лоу Фейд",
-      "mid fade": currentLang === "pl" ? "Mid Fade" : currentLang === "en" ? "Mid Fade" : "Мід Фейд",
-      "high fade": currentLang === "pl" ? "High Fade" : currentLang === "en" ? "High Fade" : "Хай Фейд",
-      "burst fade": currentLang === "pl" ? "Burst Fade" : currentLang === "en" ? "Burst Fade" : "Бьорст Фейд",
-      "undercut": currentLang === "pl" ? "Undercut" : currentLang === "en" ? "Undercut" : "Андеркат",
-      "luźna": currentLang === "pl" ? "Luźna" : currentLang === "en" ? "Loose" : "Розпущена",
-      "tekstura": currentLang === "pl" ? "Z teksturą" : currentLang === "en" ? "Textured" : "З текстурою",
-      "quiff": currentLang === "pl" ? "Quiff" : currentLang === "en" ? "Quiff" : "Квіфф",
-      "pompadour": currentLang === "pl" ? "Pompadour" : currentLang === "en" ? "Pompadour" : "Помпадур",
-      "prosta": currentLang === "pl" ? "Prosta" : currentLang === "en" ? "Straight" : "Пряма",
-      "curtain": currentLang === "pl" ? "Curtain" : currentLang === "en" ? "Curtain" : "Куртейн",
-      "side": currentLang === "pl" ? "Z boku" : currentLang === "en" ? "Side" : "На бік",
-      "brak": currentLang === "pl" ? "Bez grzywki" : currentLang === "en" ? "No Bangs" : "Без чубчика"
-    };
-
-    if (langMap[value]) {
-      if (typeof langMap[value] === "string") {
-        opt.textContent = t(langMap[value]);
-      } else {
-        opt.textContent = langMap[value];
+  // select options translation (wartości pozostają takie same, tylko tekst)
+  document.querySelectorAll("select").forEach(select => {
+    for (const opt of select.options) {
+      const val = opt.value;
+      const map = {
+        "": "filter_any",
+        "krótkie": "filter_short",
+        "średnie": "filter_medium",
+        "długie": "filter_long",
+        "klasyczny": "filter_classic",
+        "nowoczesny": "filter_modern",
+        "sportowy": "filter_sport",
+        "alternatywny": "filter_alternative",
+        "retro": "filter_retro",
+        "naturalny": "filter_natural",
+        "wojskowy": "filter_military",
+        "owalna": "filter_oval",
+        "okrągła": "filter_round",
+        "kwadratowa": "filter_square",
+        "trójkątna": "filter_triangle",
+        "diamentowa": "filter_diamond",
+        // warianty i hair types mogą być tłumaczone przez mapę w skryptach,
+      };
+      if (map[val]) {
+        opt.textContent = t(map[val]);
       }
     }
   });
 
-  // Przełącznik
   document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.lang === currentLang);
   });
 
-  // Tytuł strony
   const titleEl = document.querySelector(".page-title");
   if (titleEl) titleEl.textContent = t("page_title");
-
-  // Footer
   const footer = document.querySelector("footer p");
   if (footer) footer.textContent = t("footer");
+  document.title = t("page_title");
 }
 
-// Inicjalizacja języka
 document.addEventListener("DOMContentLoaded", () => {
   updateLanguage();
   document.querySelectorAll(".lang-btn").forEach(btn => {
