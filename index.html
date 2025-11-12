@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+  <script src="lang.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Katalog fryzur męskich</title>
@@ -8,10 +9,18 @@
 </head>
 <body>
   <header>
+    <script src="lang.js"></script>
+
     <nav class="top-nav">
-      <a href="index.html" class="nav-link active">Katalog fryzur</a>
-      <a href="builder.html" class="nav-link">Wybierz swoją fryzurę</a>
-    </nav>
+    <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog fryzur</a>
+    <a href="builder.html" class="nav-link" data-key="nav_builder">Wybierz swoją fryzurę</a>
+  </nav>
+    
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="pl">PL</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ua">UA</button>
+    </div>
     <!--<h1>Katalog fryzur męskich</h1>-->
   </header>
   <h1 class="page-title">Katalog fryzur męskich</h1>
@@ -47,7 +56,7 @@
   <main id="hairstyleContainer" class="grid"></main>
 
   <footer>
-    <p>© 2025 Katalog Fryzur Męskich</p>
+    <p data-key="footer">© 2025 Katalog Fryzur Męskich</p>
   </footer>
 
   <!-- Skrypt katalogu -->

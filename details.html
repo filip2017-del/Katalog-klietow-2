@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+  <script src="lang.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Szczegóły fryzury</title>
@@ -9,10 +10,16 @@
 </head>
 <body>
   <header>
+    
+    <div class="lang-switch">
+  <button class="lang-btn active" data-lang="pl">PL</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+  <button class="lang-btn" data-lang="ua">UA</button>
+  </div>
     <nav class="top-nav">
-      <a href="index.html" class="nav-link">Katalog fryzur</a>
-      <a href="builder.html" class="nav-link">Wybierz swoją fryzurę</a>
-    </nav>
+    <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog fryzur</a>
+    <a href="builder.html" class="nav-link" data-key="nav_builder">Wybierz swoją fryzurę</a>
+  </nav>
   </header>
 
   <main id="detailsContainer" class="details-container"></main>

@@ -1,4 +1,17 @@
+// builder.js
 document.addEventListener("DOMContentLoaded", async () => {
+  // Czekamy na załadowanie lang.js
+  if (typeof updateLanguage !== "function") {
+    console.warn("lang.js nie załadowany – czekam...");
+    await new Promise(resolve => {
+      const check = () => {
+        if (typeof updateLanguage === "function") resolve();
+        else setTimeout(check, 50);
+      };
+      check();
+    });
+  }
+
   const bokiSelect = document.getElementById("bokiSelect");
   const goraSelect = document.getElementById("goraSelect");
   const grzywkaSelect = document.getElementById("grzywkaSelect");
@@ -107,11 +120,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       resultSection.style.display = "block";
       resultCard.style.display = "none";
       noMatch.style.display = "block";
+      noMatch.textContent = t("builder_no_match");
       viewDetailsBtn.style.display = "none";
       return;
     }
 
-    // Najlepsze dopasowanie (najwięcej zgodnych pól)
     currentMatch = matches.reduce((best, curr) => {
       const bestScore = (!boki || best.boki === boki ? 1 : 0) +
                         (!gora || best.gora === gora ? 1 : 0) +
@@ -136,9 +149,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     resultName.textContent = currentMatch.name;
     resultDesc.textContent = currentMatch.description;
+    viewDetailsBtn.textContent = t("builder_view_details");
 
-    // Spinner + płynne zdjęcie
+    // Spinner + zdjęcie
     loadingSpinner.style.display = "block";
+    loadingSpinner.textContent = t("loading");
     previewImg.style.opacity = 0;
 
     const newImg = new Image();
@@ -165,6 +180,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       variantDesc.style.display = "none";
     }
+
+    // Aktualizacja po zmianie języka
+    updateLanguage();
   }
 
   // === 4. NASŁUCHIWANIE ZMIAN ===
@@ -181,4 +199,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // === 6. INICJALIZACJA ===
   findMatch();
+
+  // === 7. Przełączniki języka ===
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setLanguage(btn.dataset.lang);
+      setTimeout(() => {
+        findMatch(); // Odśwież wynik po zmianie języka
+        updateLanguage();
+      }, 50);
+    });
+  });
+
+  // === 8. Tłumaczenie etykiet w selectach ===
+  function translateSelectLabels() {
+    document.querySelectorAll(".control-group h3").forEach(h3 => {
+      const text = h3.textContent.trim();
+      if (text === "Boki") h3.textContent = t("builder_sides");
+      if (text === "Góra") h3.textContent = t("builder_top");
+      if (text === "Grzywka") h3.textContent = t("builder_bangs");
+      if (text === "Styl") h3.textContent = t("builder_style");
+    });
+
+    document.querySelector(".result h3").textContent = t("builder_match");
+  }
+
+  // Wywołaj przy starcie i po zmianie języka
+  translateSelectLabels();
+  updateLanguage();
 });

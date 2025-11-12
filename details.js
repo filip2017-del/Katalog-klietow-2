@@ -1,4 +1,17 @@
+// details.js
 document.addEventListener("DOMContentLoaded", async () => {
+  // Czekamy na załadowanie lang.js
+  if (typeof updateLanguage !== "function") {
+    console.warn("lang.js nie załadowany – czekam...");
+    await new Promise(resolve => {
+      const check = () => {
+        if (typeof updateLanguage === "function") resolve();
+        else setTimeout(check, 50);
+      };
+      check();
+    });
+  }
+
   const container = document.getElementById("detailsContainer");
   const item = JSON.parse(localStorage.getItem("selectedHairstyle"));
 
@@ -7,9 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
- 
-
-  // === 1. Warianty z images (obiekt z opcjonalnym desc) ===
+  // === 1. Warianty z images ===
   const variants = Object.keys(item.images || {}).map(key => {
     const [boki, gora, grzywka] = key.split("_");
     const data = item.images[key];
@@ -36,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const defaultKey = `${item.boki}_${item.gora}_${item.grzywka}`;
   const defaultVariant = variants.find(v => `${v.boki}_${v.gora}_${v.grzywka}` === defaultKey) || variants[0];
 
-  // === 4. HTML z wariantami pod nazwą ===
+  // === 4. HTML ===
   container.innerHTML = `
     <section class="details-gallery">
       <img id="mainImage" src="${defaultVariant.src}" alt="${item.name}" loading="lazy">
@@ -44,25 +55,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     </section>
 
     <section class="details-info">
-      <h2>${item.name}</h2>
+      <h2 data-key="item_name">${item.name}</h2>
 
-      <!-- WARIANTY POD NAZWĄ -->
       <div class="variant-bar" id="variantBar"></div>
-
-      <!-- PRZEŁĄCZNIKI -->
       <div class="variant-controls" id="variantControls"></div>
 
-      <p><strong>Długość:</strong> ${item.length}</p>
-      <p><strong>Styl:</strong> ${item.style}</p>
-      <p><strong>Kształt twarzy:</strong> ${item.faceShapes?.join(", ") || "—"}</p>
-      <p><strong>Typ włosów:</strong> ${item.hairType?.join(", ") || "—"}</p>
-      <p>${item.description}</p>
+      <p><strong data-key="details_length">Długość:</strong> <span data-key="length_value">${item.length}</span></p>
+      <p><strong data-key="details_style">Styl:</strong> <span data-key="style_value">${item.style}</span></p>
+      <p><strong puffed data-key="details_face">Kształt twarzy:</strong> <span data-key="face_value">${item.faceShapes?.join(", ") || "—"}</span></p>
+      <p><strong data-key="details_hair">Typ włosów:</strong> <span data-key="hair_value">${item.hairType?.join(", ") || "—"}</span></p>
+      <p data-key="item_desc">${item.description}</p>
 
-      <button id="backBtn" class="back-btn">Powrót do katalogu</button>
+      <button id="backBtn" class="back-btn" data-key="back_button">Powrót do katalogu</button>
     </section>
   `;
 
-  // === 5. Pasek wariantów – tylko jeśli >1 opcja ===
+  // === 5. Pasek wariantów ===
   const variantBar = document.getElementById("variantBar");
   const items = [];
 
@@ -99,14 +107,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     variantBar.innerHTML = items.join("");
   }
 
-  // === 6. Selecty – tylko jeśli >1 opcja ===
+  // === 6. Selecty ===
   const controls = document.getElementById("variantControls");
   const selectHTML = [];
 
   if (bokiOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label>Boki</label>
+        <label data-key="builder_sides">Boki</label>
         <select id="bokiSelect">${bokiOptions.map(o => `<option value="${o}">${o}</option>`).join("")}</select>
       </div>
     `);
@@ -115,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (goraOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label>Góra</label>
+        <label data-key="builder_top">Góra</label>
         <select id="goraSelect">${goraOptions.map(o => `<option value="${o}">${o}</option>`).join("")}</select>
       </div>
     `);
@@ -124,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (grzywkaOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label>Grzywka</label>
+        <label data-key="builder_bangs">Grzywka</label>
         <select id="grzywkaSelect">${grzywkaOptions.map(o => `<option value="${o}">${o}</option>`).join("")}</select>
       </div>
     `);
@@ -174,10 +182,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (el) el.addEventListener("change", updateImage);
   });
 
-  updateImage(); // pierwsze uruchomienie
+  updateImage();
 
-  // Powrót
+  // === 8. Powrót ===
   document.getElementById("backBtn").addEventListener("click", () => {
     window.location.href = "index.html";
+  });
+
+  // === 9. Wywołaj tłumaczenie po załadowaniu ===
+  updateLanguage();
+
+  // === 10. Przełączniki języka ===
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setLanguage(btn.dataset.lang);
+      // Ponowne tłumaczenie po zmianie języka
+      setTimeout(updateLanguage, 50);
+    });
   });
 });
