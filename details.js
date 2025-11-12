@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  document.getElementById("hairstyleName").textContent = item.name;
+ 
 
   // === 1. Warianty z images (obiekt z opcjonalnym desc) ===
   const variants = Object.keys(item.images || {}).map(key => {
