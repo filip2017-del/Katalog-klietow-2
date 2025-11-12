@@ -1,4 +1,4 @@
-// === details.js (oczyszczony + poprawione tłumaczenia wariantów) ===
+// === details.js (pełna poprawiona wersja z tłumaczeniem wariantów i przeładowaniem) ===
 document.addEventListener("DOMContentLoaded", async () => {
   if (typeof updateLanguage !== "function") {
     await new Promise(resolve => {
@@ -87,6 +87,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const defaultKey = `${item.boki}_${item.gora}_${item.grzywka}`;
   const defaultVariant = variants.find(v => `${v.boki}_${v.gora}_${v.grzywka}` === defaultKey) || variants[0];
 
+  // --- TŁUMACZONE ETYKIETY DLA WARIANTÓW ---
+  const variantLabels = {
+    boki: t("builder_sides"),
+    gora: t("builder_top"),
+    grzywka: t("builder_bangs")
+  };
+
   // --- generowanie HTML
   container.innerHTML = `
     <section class="details-gallery">
@@ -115,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (bokiOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label>${t("builder_sides")}</label>
+        <label>${variantLabels.boki}</label>
         <select id="bokiSelect">
           ${bokiOptions.map(o => `<option value="${o}">${translateValue(o, "variant")}</option>`).join("")}
         </select>
@@ -126,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (goraOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label>${t("builder_top")}</label>
+        <label>${variantLabels.gora}</label>
         <select id="goraSelect">
           ${goraOptions.map(o => `<option value="${o}">${translateValue(o, "variant")}</option>`).join("")}
         </select>
@@ -137,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (grzywkaOptions.length > 1) {
     selectHTML.push(`
       <div class="variant-group">
-        <label>${t("builder_bangs")}</label>
+        <label>${variantLabels.grzywka}</label>
         <select id="grzywkaSelect">
           ${grzywkaOptions.map(o => `<option value="${o}">${translateValue(o, "variant")}</option>`).join("")}
         </select>
@@ -171,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (variant.desc) {
-      descEl.textContent = variant.desc;
+      descEl.textContent = typeof variant.desc === "object" ? (variant.desc[currentLang] || variant.desc.pl) : variant.desc;
       descEl.style.display = "block";
     } else {
       descEl.style.display = "none";
@@ -186,6 +193,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateImage();
   document.getElementById("backBtn").addEventListener("click", () => window.location.href = "index.html");
 
+  // --- OBSŁUGA ZMIANY JĘZYKA ---
+  const handleLanguageChange = () => {
+    if (window.location.pathname.includes("details.html")) {
+      // Przeładuj stronę, by odświeżyć tłumaczenia
+      window.location.reload();
+    }
+  };
+
+  window.addEventListener("languageChanged", handleLanguageChange);
+
+  // Pierwsze wywołanie updateLanguage
   await new Promise(r => setTimeout(r, 50));
   updateLanguage();
 });

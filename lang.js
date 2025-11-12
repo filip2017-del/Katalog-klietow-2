@@ -1,4 +1,4 @@
-// === lang.js (z rozszerzeniami dla typów włosów/wariantów) ===
+// === lang.js (pełna wersja z przeładowaniem na details.html + wszystkie tłumaczenia) ===
 
 const translations = {
   pl: {
@@ -38,7 +38,7 @@ const translations = {
     builder_view_details: "Zobacz szczegóły",
     loading: "Ładowanie...",
     footer: "© 2025 Katalog Fryzur Męskich",
-    // --- nowe klucze dla typów włosów i wariantów (używane przez script/details)
+    // --- typy włosów i warianty
     hair_straight: "Proste",
     hair_wavy: "Falowane",
     hair_curly: "Kręcone",
@@ -87,12 +87,12 @@ const translations = {
     builder_view_details: "View Details",
     loading: "Loading...",
     footer: "© 2025 Men's Hairstyle Catalog",
-    // --- nowe klucze
+    // --- poprawione tłumaczenia wariantów
     hair_straight: "Straight",
     hair_wavy: "Wavy",
     hair_curly: "Curly",
     variant_none: "No bangs",
-    variant_side: "Side",
+    variant_side: "Side-swept",
     variant_curtain: "Curtain",
     variant_textured: "Textured",
     variant_loose: "Loose",
@@ -136,7 +136,7 @@ const translations = {
     builder_view_details: "Переглянути деталі",
     loading: "Завантаження...",
     footer: "© 2025 Каталог чоловічих зачісок",
-    // --- nowe klucze
+    // --- warianty
     hair_straight: "Пряме",
     hair_wavy: "Хвилясте",
     hair_curly: "Кучеряве",
@@ -161,39 +161,53 @@ function setLanguage(lang) {
     currentLang = lang;
     localStorage.setItem("lang", lang);
     document.documentElement.lang = lang;
+
+    // Aktualizuj UI
     updateLanguage();
+
+    // Powiadom inne skrypty
     if (typeof reloadContent === "function") reloadContent(lang);
+    window.dispatchEvent(new CustomEvent("languageChanged", { detail: lang }));
+
+    // Przeładuj tylko stronę z detalami (aby odświeżyć tłumaczenia wariantów)
+    if (window.location.pathname.includes("details.html")) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 100); // małe opóźnienie dla płynności
+    }
   }
 }
 
 function updateLanguage() {
+  // Tłumaczenie elementów z data-key
   document.querySelectorAll("[data-key]").forEach(el => {
     const key = el.getAttribute("data-key");
-    if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
+    if (translations[currentLang][key]) {
+      el.textContent = translations[currentLang][key];
+    }
   });
 
-  // select options translation (wartości pozostają takie same, tylko tekst)
+  // Tłumaczenie opcji w selectach (filtry)
   document.querySelectorAll("select").forEach(select => {
     for (const opt of select.options) {
-      const val = opt.value;
+      const val = opt.value.toLowerCase().trim();
       const map = {
         "": "filter_any",
-        "krótkie": "filter_short",
-        "średnie": "filter_medium",
-        "długie": "filter_long",
-        "klasyczny": "filter_classic",
-        "nowoczesny": "filter_modern",
-        "sportowy": "filter_sport",
+        "krótkie": "filter_short", "short": "filter_short",
+        "średnie": "filter_medium", "medium": "filter_medium",
+        "długie": "filter_long", "long": "filter_long",
+        "klasyczny": "filter_classic", "classic": "filter_classic",
+        "nowoczesny": "filter_modern", "modern": "filter_modern",
+        "sportowy": "filter_sport", "sporty": "filter_sport",
         "alternatywny": "filter_alternative",
         "retro": "filter_retro",
-        "naturalny": "filter_natural",
-        "wojskowy": "filter_military",
-        "owalna": "filter_oval",
-        "okrągła": "filter_round",
-        "kwadratowa": "filter_square",
-        "trójkątna": "filter_triangle",
-        "diamentowa": "filter_diamond",
-        // warianty i hair types mogą być tłumaczone przez mapę w skryptach,
+        "naturalny": "filter_natural", "natural": "filter_natural",
+        "wojskowy": "filter_military", "military": "filter_military",
+        "owalna": "filter_oval", "oval": "filter_oval",
+        "okrągła": "filter_round", "round": "filter_round",
+        "kwadratowa": "filter_square", "square": "filter_square",
+        "trójkątna": "filter_triangle", "triangle": "filter_triangle",
+        "diamentowa": "filter_diamond", "diamond": "filter_diamond"
       };
       if (map[val]) {
         opt.textContent = t(map[val]);
@@ -201,20 +215,29 @@ function updateLanguage() {
     }
   });
 
+  // Aktualizacja przycisków języka
   document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.lang === currentLang);
   });
 
-  const titleEl = document.querySelector(".page-title");
+  // Tytuł strony i footer
+  const titleEl = document.querySelector("title");
   if (titleEl) titleEl.textContent = t("page_title");
+
   const footer = document.querySelector("footer p");
   if (footer) footer.textContent = t("footer");
-  document.title = t("page_title");
 }
 
+// Inicjalizacja po załadowaniu DOM
 document.addEventListener("DOMContentLoaded", () => {
   updateLanguage();
+
+  // Obsługa kliknięć w przyciski języka
   document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
   });
 });
+
+// Eksport dla innych skryptów (opcjonalnie)
+window.t = t;
+window.currentLang = () => currentLang;
