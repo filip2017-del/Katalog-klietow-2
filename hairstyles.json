@@ -92,8 +92,8 @@
     },
     "length": "medium",
     "style": [
-      "retro",
-      "modern"
+      "modern",
+      "retro"
     ],
     "boki": [
       "taper",
@@ -121,9 +121,47 @@
     "images": {
       "default": {
         "src": "./images/curtain_bangs.jpg"
-      },
-      "taper_medium_curtain": {
-        "src": "./images/curtain_bangs_taper.jpg"
+      }
+    }
+  },
+  {
+    "name": {
+      "pl": "Taper fluffy hair",
+      "en": "Taper fluffy hair",
+      "ua": "Taper fluffy hair"
+    },
+    "length": "medium",
+    "style": [
+      "modern"
+    ],
+    "boki": [
+      "low_fade",
+      "burst_fade",
+      "taper"
+    ],
+    "gora": [
+      "medium",
+      "voluminous"
+    ],
+    "grzywka": [
+      "textured"
+    ],
+    "faceShapes": [
+      "oval",
+      "round"
+    ],
+    "hairType": [
+      "wavy",
+      "curly"
+    ],
+    "description": {
+      "pl": "",
+      "en": "",
+      "ua": ""
+    },
+    "images": {
+      "default": {
+        "src": "./images/taper_fade.jpg"
       }
     }
   },
@@ -164,12 +202,6 @@
     "images": {
       "default": {
         "src": "./images/french_crop.jpg"
-      },
-      "mid_fade_short_straight": {
-        "src": "./images/french_crop_mid.jpg"
-      },
-      "low_fade_short_textured": {
-        "src": "./images/french_crop_low_textured.jpg"
       }
     }
   },
@@ -253,12 +285,6 @@
     "images": {
       "default": {
         "src": "./images/crew_cut.jpg"
-      },
-      "low_fade_short_none": {
-        "src": "./images/crew_cut_low.jpg"
-      },
-      "taper_short_none": {
-        "src": "./images/crew_cut_taper.jpg"
       }
     }
   },
@@ -454,12 +480,6 @@
     "images": {
       "default": {
         "src": "./images/mod_cut.jpg"
-      },
-      "taper_medium_curtain": {
-        "src": "./images/mod_cut_taper_curtain.jpg"
-      },
-      "undercut_textured_side": {
-        "src": "./images/mod_cut_undercut_side.jpg"
       }
     }
   },
@@ -497,9 +517,6 @@
     "images": {
       "default": {
         "src": "./images/slick_back.jpg"
-      },
-      "taper_medium_side": {
-        "src": "./images/slick_back_taper.jpg"
       }
     }
   },
@@ -538,9 +555,6 @@
     "images": {
       "default": {
         "src": "./images/caesar_cut.jpg"
-      },
-      "taper_short_straight": {
-        "src": "./images/caesar_cut_taper.jpg"
       }
     }
   },
@@ -562,8 +576,8 @@
       "long"
     ],
     "grzywka": [
-      "side",
-      "curtain"
+      "curtain",
+      "side"
     ],
     "faceShapes": [
       "oval",
@@ -582,12 +596,6 @@
     "images": {
       "default": {
         "src": "./images/undercut.jpg"
-      },
-      "undercut_long_side": {
-        "src": "./images/undercut_side.jpg"
-      },
-      "undercut_long_curtain": {
-        "src": "./images/undercut_curtain.jpg"
       }
     }
   }

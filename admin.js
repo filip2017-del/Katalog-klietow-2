@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const options = {
     style: ["classic", "modern", "sport", "alternative", "retro", "natural", "military"],
-    boki: ["high_fade", "mid_fade", "low_fade", "taper", "undercut"],
+    boki: ["high_fade", "mid_fade", "low_fade", "burst_fade", "taper", "undercut"],
     gora: ["short", "medium", "long", "textured", "voluminous", "spiky"],
     grzywka: ["none", "straight", "curtain", "side", "textured"],
     faceShapes: ["oval", "round", "square", "triangle", "diamond"],

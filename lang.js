@@ -10,22 +10,23 @@ const translations = {
     filter_style: "Styl",
     filter_face: "Kształt twarzy",
     filter_any: "Dowolne",
-    
+    //boki
     filter_high_fade: "Wysoki fade",
     filter_mid_fade: "Mid fade",
     filter_low_fade: "Niski fade",
     filter_taper: "Taper",
+    filter_burst_fade: "Burst fade",
     filter_undercut: "Undercut",
 
-    
+    //gora
     filter_textured: "Z teksturą",
     filter_voluminous: "Z objętością",
     filter_spiky: "Kolczasta",
-
+    //grzywka
     filter_none: "Brak",
     filter_straight: "Prosta",
-    filter_curtain: "Kurtyna",
-    filter_side: "Z boku",
+    filter_curtain: "Kurtyna (midle part)",
+    filter_side: "Na boku",
 
     // --- Filtry: Długość ---
     filter_short: "Krótkie",
@@ -77,6 +78,7 @@ const translations = {
     variant_loose: "Luźna",
     variant_high_fade: "Wysoki fade",
     variant_mid_fade: "Mid fade",
+    variant_burst_fade: "Burst fade",
     variant_low_fade: "Niski fade",
     variant_taper: "Taper",
     variant_undercut: "Undercut",
@@ -99,6 +101,7 @@ const translations = {
     filter_high_fade: "High Fade",
     filter_mid_fade: "Mid Fade",
     filter_low_fade: "Low Fade",
+    filter_burst_fade: "Burst fade",
     filter_taper: "Taper",
     filter_undercut: "Undercut",
 
@@ -153,6 +156,7 @@ const translations = {
     variant_loose: "Loose",
     variant_high_fade: "High Fade",
     variant_mid_fade: "Mid Fade",
+    variant_burst_fade: "Burst fade",
     variant_low_fade: "Low Fade",
     variant_taper: "Taper",
     variant_undercut: "Undercut",
@@ -174,6 +178,7 @@ const translations = {
     filter_high_fade: "Високий фейд",
     filter_mid_fade: "Середній фейд",
     filter_low_fade: "Низький фейд",
+    filter_burst_fade: "Burst fade",
     filter_taper: "Тейпер",
     filter_undercut: "Андеркат",
 
@@ -228,6 +233,7 @@ const translations = {
     variant_loose: "Розпущене",
     variant_high_fade: "Високий фейд",
     variant_mid_fade: "Середній фейд",
+    variant_burst_fade: "Burst fade",
     variant_low_fade: "Нgateкий фейд",
     variant_taper: "Тейпер",
     variant_undercut: "Андеркат",
