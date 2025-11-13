@@ -200,6 +200,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.reload();
     }
   };
+  // === PRZEŁADOWANIE PO ZMIANIE JĘZYKA (tylko w details.html) ===
+window.addEventListener("languageChanged", () => {
+  if (window.location.pathname.includes("details.html")) {
+    window.location.reload();
+  }
+});
 
   window.addEventListener("languageChanged", handleLanguageChange);
 

@@ -6,24 +6,20 @@
       "ua": "Базз Кат"
     },
     "length": "krótkie",
-    "style": "sportowy",
-    "boki": "high fade",
+    "style": ["sportowy","nowoczesny"],
+    "boki": ["high fade","mid fade", "low fade"],
     "gora": "krótka",
-    "grzywka": "brak",
+    "grzywka": ["brak","prosta"],
     "faceShapes": ["owalna", "kwadratowa"],
-    "hairType": ["proste", "falowane"],
+    "hairType": ["proste", "falowane", "kręcone"],
     "description": {
       "pl": "Bardzo krótka fryzura o równomiernej długości. Nie wymaga stylizacji.",
       "en": "A very short hairstyle with an even length. Requires no styling.",
       "ua": "Дуже коротка зачіска рівної довжини. Не потребує укладки."
     },
-    "tags": {
-      "pl": ["łatwa pielęgnacja", "minimalistyczna"],
-      "en": ["low maintenance", "minimalist"],
-      "ua": ["легкий догляд", "мінімалістична"]
-    },
+   
     "images": {
-      "high fade_krótka_brak": {
+      "high fade_krótka_prosta": {
         "src": "./images/buzz_cut.jpg",
         "desc": {
           "pl": "Klasyczny buzz cut – równo, czysto, zero stylizacji",
@@ -31,8 +27,16 @@
           "ua": "Класичний базз кат – рівно, чисто, без укладки"
         }
       },
-      "high fade_krótka_prosta": {
-        "src": "./images/buzz_cut_2.jpg",
+      "mid fade_krótka_prosta": {
+        "src": "./images/buzz_cut.jpg",
+        "desc": {
+          "pl": "Klasyczny buzz cut – równo, czysto, zero stylizacji",
+          "en": "Classic buzz cut – even, clean, zero styling",
+          "ua": "Класичний базз кат – рівно, чисто, без укладки"
+        }
+      },
+      "low fade_krótka_prosta": {
+        "src": "./images/buzz_cut.jpg",
         "desc": {
           "pl": "Wersja z lekkim cieniowaniem",
           "en": "Version with light shading",
