@@ -2,6 +2,7 @@
 
 const translations = {
   pl: {
+    // --- Nawigacja i strona główna ---
     nav_catalog: "Katalog fryzur",
     nav_builder: "Wybierz swoją fryzurę",
     page_title: "Katalog fryzur męskich",
@@ -9,9 +10,29 @@ const translations = {
     filter_style: "Styl",
     filter_face: "Kształt twarzy",
     filter_any: "Dowolne",
+    
+    filter_high_fade: "Wysoki fade",
+    filter_mid_fade: "Mid fade",
+    filter_low_fade: "Niski fade",
+    filter_taper: "Taper",
+    filter_undercut: "Undercut",
+
+    
+    filter_textured: "Z teksturą",
+    filter_voluminous: "Z objętością",
+    filter_spiky: "Kolczasta",
+
+    filter_none: "Brak",
+    filter_straight: "Prosta",
+    filter_curtain: "Kurtyna",
+    filter_side: "Z boku",
+
+    // --- Filtry: Długość ---
     filter_short: "Krótkie",
     filter_medium: "Średnie",
     filter_long: "Długie",
+
+    // --- Filtry: Styl ---
     filter_classic: "Klasyczny",
     filter_modern: "Nowoczesny",
     filter_sport: "Sportowy",
@@ -19,16 +40,22 @@ const translations = {
     filter_retro: "Retro",
     filter_natural: "Naturalny",
     filter_military: "Wojskowy",
+
+    // --- Filtry: Kształt twarzy ---
     filter_oval: "Owalna",
     filter_round: "Okrągła",
     filter_square: "Kwadratowa",
     filter_triangle: "Trójkątna",
     filter_diamond: "Diamentowa",
+
+    // --- Szczegóły fryzury ---
     details_length: "Długość:",
     details_style: "Styl:",
     details_face: "Kształt twarzy:",
     details_hair: "Typ włosów:",
     back_button: "Powrót do katalogu",
+
+    // --- Builder (selektory wariantów) ---
     builder_sides: "Boki",
     builder_top: "Góra",
     builder_bangs: "Grzywka",
@@ -36,19 +63,29 @@ const translations = {
     builder_match: "Najlepsze dopasowanie:",
     builder_no_match: "Brak fryzur spełniających kryteria.",
     builder_view_details: "Zobacz szczegóły",
-    loading: "Ładowanie...",
-    footer: "© 2025 Katalog Fryzur Męskich",
-    // --- typy włosów i warianty
+
+    // --- Typy włosów ---
     hair_straight: "Proste",
     hair_wavy: "Falowane",
     hair_curly: "Kręcone",
+
+    // --- Warianty ---
     variant_none: "Brak",
     variant_side: "Z boku",
-    variant_curtain: "Curtain",
+    variant_curtain: "Kurtyna",
     variant_textured: "Z teksturą",
     variant_loose: "Luźna",
-    variant_high_fade: "High Fade",
-    variant_undercut: "Undercut"
+    variant_high_fade: "Wysoki fade",
+    variant_mid_fade: "Mid fade",
+    variant_low_fade: "Niski fade",
+    variant_taper: "Taper",
+    variant_undercut: "Undercut",
+    variant_short: "Krótka",
+    variant_straight: "Prosta",
+
+    // --- Inne ---
+    loading: "Ładowanie...",
+    footer: "© 2025 Katalog Fryzur Męskich"
   },
   en: {
     nav_catalog: "Hairstyle Catalog",
@@ -58,9 +95,25 @@ const translations = {
     filter_style: "Style",
     filter_face: "Face Shape",
     filter_any: "Any",
+
+    filter_high_fade: "High Fade",
+    filter_mid_fade: "Mid Fade",
+    filter_low_fade: "Low Fade",
+    filter_taper: "Taper",
+    filter_undercut: "Undercut",
+
     filter_short: "Short",
     filter_medium: "Medium",
     filter_long: "Long",
+    filter_textured: "Textured",
+    filter_voluminous: "Voluminous",
+    filter_spiky: "Spiky",
+
+    filter_none: "None",
+    filter_straight: "Straight",
+    filter_curtain: "Curtain",
+    filter_side: "Side-parted",
+
     filter_classic: "Classic",
     filter_modern: "Modern",
     filter_sport: "Sporty",
@@ -68,36 +121,46 @@ const translations = {
     filter_retro: "Retro",
     filter_natural: "Natural",
     filter_military: "Military",
+
     filter_oval: "Oval",
     filter_round: "Round",
     filter_square: "Square",
     filter_triangle: "Triangle",
     filter_diamond: "Diamond",
+
     details_length: "Length:",
     details_style: "Style:",
     details_face: "Face Shape:",
     details_hair: "Hair Type:",
     back_button: "Back to Catalog",
+
     builder_sides: "Sides",
     builder_top: "Top",
     builder_bangs: "Bangs",
     builder_style: "Style",
     builder_match: "Best Match:",
-    builder_no_match: "No hairstyles found for selected filters.",
+    builder_no_match: "No hairstyles match the criteria.",
     builder_view_details: "View Details",
-    loading: "Loading...",
-    footer: "© 2025 Men's Hairstyle Catalog",
-    // --- poprawione tłumaczenia wariantów
+
     hair_straight: "Straight",
     hair_wavy: "Wavy",
     hair_curly: "Curly",
-    variant_none: "No bangs",
-    variant_side: "Side-swept",
+
+    variant_none: "None",
+    variant_side: "Side-parted",
     variant_curtain: "Curtain",
     variant_textured: "Textured",
     variant_loose: "Loose",
     variant_high_fade: "High Fade",
-    variant_undercut: "Undercut"
+    variant_mid_fade: "Mid Fade",
+    variant_low_fade: "Low Fade",
+    variant_taper: "Taper",
+    variant_undercut: "Undercut",
+    variant_short: "Short",
+    variant_straight: "Straight",
+
+    loading: "Loading...",
+    footer: "© 2025 Men's Hairstyle Catalog"
   },
   ua: {
     nav_catalog: "Каталог зачісок",
@@ -107,9 +170,25 @@ const translations = {
     filter_style: "Стиль",
     filter_face: "Форма обличчя",
     filter_any: "Будь-яка",
-    filter_short: "Коротке",
-    filter_medium: "Середнє",
-    filter_long: "Довге",
+
+    filter_high_fade: "Високий фейд",
+    filter_mid_fade: "Середній фейд",
+    filter_low_fade: "Низький фейд",
+    filter_taper: "Тейпер",
+    filter_undercut: "Андеркат",
+
+    filter_short: "Короткий",
+    filter_medium: "Середній",
+    filter_long: "Довгий",
+    filter_textured: "Текстурований",
+    filter_voluminous: "Об’ємний",
+    filter_spiky: "Колючкий",
+
+    filter_none: "Немає",
+    filter_straight: "Прямий",
+    filter_curtain: "Куртина",
+    filter_side: "З боковим проділом",
+
     filter_classic: "Класичний",
     filter_modern: "Сучасний",
     filter_sport: "Спортивний",
@@ -117,36 +196,46 @@ const translations = {
     filter_retro: "Ретро",
     filter_natural: "Натуральний",
     filter_military: "Військовий",
+
     filter_oval: "Овальна",
     filter_round: "Кругла",
     filter_square: "Квадратна",
     filter_triangle: "Трикутна",
-    filter_diamond: "Ромбовидна",
+    filter_diamond: "Діамантова",
+
     details_length: "Довжина:",
     details_style: "Стиль:",
     details_face: "Форма обличчя:",
     details_hair: "Тип волосся:",
-    back_button: "Повернутися до каталогу",
+    back_button: "Назад до каталогу",
+
     builder_sides: "Боки",
     builder_top: "Верх",
     builder_bangs: "Чубчик",
     builder_style: "Стиль",
     builder_match: "Найкращий збіг:",
-    builder_no_match: "Не знайдено зачісок за обраними фільтрами.",
-    builder_view_details: "Переглянути деталі",
-    loading: "Завантаження...",
-    footer: "© 2025 Каталог чоловічих зачісок",
-    // --- warianty
+    builder_no_match: "Немає зачісок за критеріями.",
+    builder_view_details: "Докладніше",
+
     hair_straight: "Пряме",
     hair_wavy: "Хвилясте",
     hair_curly: "Кучеряве",
-    variant_none: "Без чубчика",
-    variant_side: "На бік",
-    variant_curtain: "Curtain",
-    variant_textured: "З текстурою",
-    variant_loose: "Розпущена",
-    variant_high_fade: "High Fade",
-    variant_undercut: "Undercut"
+
+    variant_none: "Немає",
+    variant_side: "З боків",
+    variant_curtain: "Куртина",
+    variant_textured: "Текстуроване",
+    variant_loose: "Розпущене",
+    variant_high_fade: "Високий фейд",
+    variant_mid_fade: "Середній фейд",
+    variant_low_fade: "Нgateкий фейд",
+    variant_taper: "Тейпер",
+    variant_undercut: "Андеркат",
+    variant_short: "Коротке",
+    variant_straight: "Пряме",
+
+    loading: "Завантаження...",
+    footer: "© 2025 Каталог Чоловічих Зачісок"
   }
 };
 
@@ -166,14 +255,13 @@ function setLanguage(lang) {
     updateLanguage();
 
     // Powiadom inne skrypty
-    if (typeof reloadContent === "function") reloadContent(lang);
     window.dispatchEvent(new CustomEvent("languageChanged", { detail: lang }));
 
-    // Przeładuj tylko stronę z detalami (aby odświeżyć tłumaczenia wariantów)
+    // Przeładuj tylko stronę z detalami (opcjonalnie)
     if (window.location.pathname.includes("details.html")) {
       setTimeout(() => {
         window.location.reload();
-      }, 100); // małe opóźnienie dla płynności
+      }, 100);
     }
   }
 }
@@ -232,12 +320,28 @@ function updateLanguage() {
 document.addEventListener("DOMContentLoaded", () => {
   updateLanguage();
 
-  // Obsługa kliknięć w przyciski języka
   document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
   });
 });
 
-// Eksport dla innych skryptów (opcjonalnie)
+// === GLOBALNE FUNKCJE TŁUMACZĄCE ===
+window.translateValue = function(value, prefix) {
+  if (!value) return value;
+  const key = value.toString().trim().toLowerCase();
+  const translationKey = `${prefix}_${key}`;
+  const translated = t(translationKey);
+  return translated !== translationKey ? translated : value;
+};
+
+window.translateArray = function(arr, prefix) {
+  if (!Array.isArray(arr)) return translateValue(arr, prefix);
+  return arr.map(v => translateValue(v, prefix)).join(", ");
+};
+
+// === EKSPORT GLOBALNY ===
 window.t = t;
 window.currentLang = () => currentLang;
+window.updateLanguage = updateLanguage;
+window.setLanguage = setLanguage;
+window.langReady = true;

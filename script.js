@@ -1,4 +1,5 @@
-// === GŁÓWNA FUNKCJA ===
+// === script.js — wersja zgodna z neutralnym JSON + pełne tłumaczenie ===
+
 async function loadHairstyles() {
   const res = await fetch("hairstyles.json");
   const data = await res.json();
@@ -12,23 +13,10 @@ async function loadHairstyles() {
     const styleVal = styleFilter.value;
     const faceVal = faceFilter.value;
 
-    const styleMap = {
-      naturalny: "casual",
-      klasyczny: "classic",
-      nowoczesny: "modern",
-      sportowy: "sportowy",
-      alternatywny: "alternatywny",
-      retro: "retro",
-      wojskowy: "wojskowy"
-    };
-
     const filtered = data.filter(item => {
       const matchLength = !lengthVal || item.length === lengthVal;
-      const matchStyle =
-        !styleVal ||
-        item.style === styleVal ||
-        item.style === styleMap[styleVal];
-      const matchFace = !faceVal || item.faceShapes.includes(faceVal);
+      const matchStyle = !styleVal || (Array.isArray(item.style) ? item.style.includes(styleVal) : item.style === styleVal);
+      const matchFace = !faceVal || (Array.isArray(item.faceShapes) ? item.faceShapes.includes(faceVal) : item.faceShapes === faceVal);
       return matchLength && matchStyle && matchFace;
     });
 
@@ -42,31 +30,44 @@ async function loadHairstyles() {
   await applyFilters();
 }
 
-// === WALIDACJA OBRAZÓW ===
+// === WALIDACJA OBRAZÓW Z FALLBACKIEM ===
 async function loadValidImages(imageObj) {
   const DEFAULT_IMAGE = "./images/haircut.jpg";
   const validImages = [];
 
-  const entries = Object.entries(imageObj);
-  await Promise.all(entries.map(async ([key, data]) => {
+  const entries = Object.entries(imageObj || {});
+  for (const [key, data] of entries) {
     const src = typeof data === "string" ? data : data.src;
-    if (!src || src.trim() === "") return;
+    if (!src || src.trim() === "") continue;
 
     const img = new Image();
     img.src = src.trim();
+
     try {
       await new Promise((resolve, reject) => {
-        img.onload = () => resolve();
-        img.onerror = () => reject();
-        setTimeout(() => reject(), 3000);
+        img.onload = resolve;
+        img.onerror = reject;
+        setTimeout(reject, 3000);
       });
       validImages.push({ key, src: img.src, desc: typeof data === "object" ? data.desc : null });
-    } catch (_) {}
-  }));
+    } catch (_) {
+      /* ignoruj błędy */
+    }
+  }
 
-  return validImages.length > 0
-    ? validImages
-    : [{ key: "default", src: DEFAULT_IMAGE, desc: null }];
+  return validImages.length > 0 ? validImages : [{ key: "default", src: DEFAULT_IMAGE, desc: null }];
+}
+
+// === WYBÓR DOMYŚLNEGO OBRAZU Z TABLIC ===
+function getDefaultImage(item, validImages) {
+  const boki = Array.isArray(item.boki) ? item.boki[0] : item.boki;
+  const gora = Array.isArray(item.gora) ? item.gora[0] : item.gora;
+  const grzywka = Array.isArray(item.grzywka) ? item.grzywka[0] : item.grzywka;
+
+  const exactKey = `${boki}_${gora}_${grzywka}`;
+  const exactMatch = validImages.find(v => v.key === exactKey);
+
+  return exactMatch || validImages[0];
 }
 
 // === WYŚWIETLANIE FRYZUR ===
@@ -79,55 +80,41 @@ async function displayHairstyles(list) {
     return;
   }
 
+  const currentLang = localStorage.getItem("lang") || "pl";
+
   for (const item of list) {
     const card = document.createElement("div");
     card.className = "card";
 
-    const defaultKey = `${item.boki}_${item.gora}_${item.grzywka}`;
     const imageObj = item.images || {};
     const validImages = await loadValidImages(imageObj);
+    const defaultImage = getDefaultImage(item, validImages);
 
-    let defaultVariant = validImages.find(v => v.key === defaultKey) || validImages[0];
-    if (!defaultVariant) defaultVariant = { src: "./images/haircut.jpg", desc: null };
+    // === Tłumaczenia ===
+    const nameText = typeof item.name === "object" ? (item.name[currentLang] || item.name.pl) : item.name;
+    const descText = typeof item.description === "object" ? (item.description[currentLang] || item.description.pl) : item.description;
 
+    const lengthTranslated = translateValue(item.length, "filter");
+    const styleTranslated = translateArray(item.style, "filter");
+
+    // === Generowanie karty ===
     let galleryHTML = `
       <div class="gallery">
-        <img src="${defaultVariant.src}" alt="${typeof item.name === 'object' ? item.name[currentLang] : item.name}" class="active" loading="lazy">
-        ${defaultVariant.desc ? `<p class="variant-desc-small">${defaultVariant.desc}</p>` : ""}
+        <img src="${defaultImage.src}" alt="${nameText}" loading="lazy">
     `;
 
     if (validImages.length > 1) {
       galleryHTML += `
-        <button class="gallery-nav prev" aria-label="Poprzednie zdjęcie">‹</button>
-        <button class="gallery-nav next" aria-label="Następne zdjęcie">›</button>
+        <div class="gallery-nav">
+          <button class="gallery-nav prev">‹</button>
+          <button class="gallery-nav next">›</button>
+        </div>
         <div class="gallery-dots">
           ${validImages.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
         </div>
-      </div>
-    `;
-    } else {
-      galleryHTML += `</div>`;
+      `;
     }
-
-    // tłumaczenia
-    const nameText = typeof item.name === "object" ? (item.name[currentLang] || item.name.pl) : item.name;
-    const descText = typeof item.description === "object" ? (item.description[currentLang] || item.description.pl) : item.description;
-
-    const lengthTranslated = {
-      "krótkie": t("filter_short"),
-      "średnie": t("filter_medium"),
-      "długie": t("filter_long")
-    }[item.length] || item.length;
-
-    const styleTranslated = {
-      "klasyczny": t("filter_classic"),
-      "nowoczesny": t("filter_modern"),
-      "sportowy": t("filter_sport"),
-      "alternatywny": t("filter_alternative"),
-      "retro": t("filter_retro"),
-      "naturalny": t("filter_natural"),
-      "wojskowy": t("filter_military")
-    }[item.style] || item.style;
+    galleryHTML += `</div>`;
 
     card.innerHTML = `
       ${galleryHTML}
@@ -144,47 +131,48 @@ async function displayHairstyles(list) {
 
     container.appendChild(card);
 
-    if (validImages.length > 1) setTimeout(() => initGallery(card, validImages), 0);
+    if (validImages.length > 1) {
+      setTimeout(() => initGallery(card, validImages), 0);
+    }
   }
 }
 
 // === GALERIA ===
 function initGallery(card, images) {
   const img = card.querySelector('.gallery img');
-  const desc = card.querySelector('.variant-desc-small');
   const dots = card.querySelectorAll('.gallery-dots .dot');
   const prevBtn = card.querySelector('.gallery-nav.prev');
   const nextBtn = card.querySelector('.gallery-nav.next');
   let currentIndex = 0;
 
   function showImage(i) {
-    const variant = images[i];
-    img.src = variant.src;
-    if (desc) {
-      desc.textContent = variant.desc || "";
-      desc.style.display = variant.desc ? "block" : "none";
-    }
+    img.src = images[i].src;
     dots.forEach((d, n) => d.classList.toggle('active', n === i));
     currentIndex = i;
   }
 
-  if (nextBtn && prevBtn) {
-    nextBtn.addEventListener('click', e => { e.stopPropagation(); showImage((currentIndex + 1) % images.length); });
-    prevBtn.addEventListener('click', e => { e.stopPropagation(); showImage((currentIndex - 1 + images.length) % images.length); });
-  }
-
-  dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); showImage(i); }));
-
-  card.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') showImage((currentIndex + 1) % images.length);
-    if (e.key === 'ArrowLeft') showImage((currentIndex - 1 + images.length) % images.length);
+  nextBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    showImage((currentIndex + 1) % images.length);
   });
+
+  prevBtn?.addEventListener('click', e => {
+    e.stopPropagation();
+    showImage((currentIndex - 1 + images.length) % images.length);
+  });
+
+  dots.forEach((dot, i) =>
+    dot.addEventListener('click', e => {
+      e.stopPropagation();
+      showImage(i);
+    })
+  );
 }
 
 // === RELOAD PO ZMIANIE JĘZYKA ===
-async function reloadContent() {
-  await loadHairstyles();
-}
+window.addEventListener("languageChanged", () => {
+  loadHairstyles();
+});
 
 // === START ===
 loadHairstyles();
