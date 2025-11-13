@@ -12,22 +12,9 @@ async function loadHairstyles() {
     const styleVal = styleFilter.value;
     const faceVal = faceFilter.value;
 
-    const styleMap = {
-      naturalny: "casual",
-      klasyczny: "classic",
-      nowoczesny: "modern",
-      sportowy: "sportowy",
-      alternatywny: "alternatywny",
-      retro: "retro",
-      wojskowy: "wojskowy"
-    };
-
     const filtered = data.filter(item => {
       const matchLength = !lengthVal || item.length === lengthVal;
-      const matchStyle =
-        !styleVal ||
-        item.style === styleVal ||
-        item.style === styleMap[styleVal];
+      const matchStyle = !styleVal || item.style === styleVal;
       const matchFace = !faceVal || item.faceShapes.includes(faceVal);
       return matchLength && matchStyle && matchFace;
     });
@@ -42,31 +29,32 @@ async function loadHairstyles() {
   await applyFilters();
 }
 
-// === WALIDACJA OBRAZÓW ===
+// === WALIDACJA OBRAZÓW (dostosowana do obiektu images) ===
 async function loadValidImages(imageObj) {
   const DEFAULT_IMAGE = "./images/haircut.jpg";
   const validImages = [];
 
-  const entries = Object.entries(imageObj);
-  await Promise.all(entries.map(async ([key, data]) => {
+  for (const key in imageObj) {
+    const data = imageObj[key];
     const src = typeof data === "string" ? data : data.src;
-    if (!src || src.trim() === "") return;
+    if (!src || src.trim() === "") continue;
 
     const img = new Image();
     img.src = src.trim();
+
     try {
       await new Promise((resolve, reject) => {
         img.onload = () => resolve();
         img.onerror = () => reject();
-        setTimeout(() => reject(), 3000);
+        setTimeout(() => reject(), 5000);
       });
       validImages.push({ key, src: img.src, desc: typeof data === "object" ? data.desc : null });
-    } catch (_) {}
-  }));
+    } catch (e) {
+      // pomijamy nieistniejące
+    }
+  }
 
-  return validImages.length > 0
-    ? validImages
-    : [{ key: "default", src: DEFAULT_IMAGE, desc: null }];
+  return validImages.length > 0 ? validImages : [{ key: "default", src: DEFAULT_IMAGE, desc: null }];
 }
 
 // === WYŚWIETLANIE FRYZUR ===
@@ -75,7 +63,7 @@ async function displayHairstyles(list) {
   container.innerHTML = "";
 
   if (list.length === 0) {
-    container.innerHTML = `<p style='text-align:center; color:#aaa; grid-column:1/-1;'>${t("builder_no_match")}</p>`;
+    container.innerHTML = "<p style='text-align:center; color:#aaa; grid-column:1/-1;'>Brak fryzur spełniających kryteria.</p>";
     return;
   }
 
@@ -83,16 +71,22 @@ async function displayHairstyles(list) {
     const card = document.createElement("div");
     card.className = "card";
 
+    // Domyślny klucz
     const defaultKey = `${item.boki}_${item.gora}_${item.grzywka}`;
     const imageObj = item.images || {};
     const validImages = await loadValidImages(imageObj);
 
-    let defaultVariant = validImages.find(v => v.key === defaultKey) || validImages[0];
-    if (!defaultVariant) defaultVariant = { src: "./images/haircut.jpg", desc: null };
+    // Znajdź domyślny obraz
+    let defaultVariant = validImages.find(v => v.key === defaultKey);
+    if (!defaultVariant && validImages.length > 0) {
+      defaultVariant = validImages[0];
+    } else if (!defaultVariant) {
+      defaultVariant = { src: "./images/haircut.jpg", desc: null };
+    }
 
     let galleryHTML = `
       <div class="gallery">
-        <img src="${defaultVariant.src}" alt="${typeof item.name === 'object' ? item.name[currentLang] : item.name}" class="active" loading="lazy">
+        <img src="${defaultVariant.src}" alt="${item.name}" class="active" loading="lazy">
         ${defaultVariant.desc ? `<p class="variant-desc-small">${defaultVariant.desc}</p>` : ""}
     `;
 
@@ -109,34 +103,15 @@ async function displayHairstyles(list) {
       galleryHTML += `</div>`;
     }
 
-    // tłumaczenia
-    const nameText = typeof item.name === "object" ? (item.name[currentLang] || item.name.pl) : item.name;
-    const descText = typeof item.description === "object" ? (item.description[currentLang] || item.description.pl) : item.description;
-
-    const lengthTranslated = {
-      "krótkie": t("filter_short"),
-      "średnie": t("filter_medium"),
-      "długie": t("filter_long")
-    }[item.length] || item.length;
-
-    const styleTranslated = {
-      "klasyczny": t("filter_classic"),
-      "nowoczesny": t("filter_modern"),
-      "sportowy": t("filter_sport"),
-      "alternatywny": t("filter_alternative"),
-      "retro": t("filter_retro"),
-      "naturalny": t("filter_natural"),
-      "wojskowy": t("filter_military")
-    }[item.style] || item.style;
-
     card.innerHTML = `
       ${galleryHTML}
-      <h3>${nameText}</h3>
-      <p><strong>${t("details_length")}</strong> ${lengthTranslated}</p>
-      <p><strong>${t("details_style")}</strong> ${styleTranslated}</p>
-      <p>${descText}</p>
+      <h3>${item.name}</h3>
+      <p><strong>Długość:</strong> ${item.length}</p>
+      <p><strong>Styl:</strong> ${item.style}</p>
+      <p>${item.description}</p>
     `;
 
+    // Kliknięcie → szczegóły
     card.addEventListener("click", () => {
       localStorage.setItem("selectedHairstyle", JSON.stringify(item));
       window.location.href = "details.html";
@@ -144,46 +119,71 @@ async function displayHairstyles(list) {
 
     container.appendChild(card);
 
-    if (validImages.length > 1) setTimeout(() => initGallery(card, validImages), 0);
+    if (validImages.length > 1) {
+      setTimeout(() => initGallery(card, validImages), 0);
+    }
   }
 }
 
 // === GALERIA ===
 function initGallery(card, images) {
+  const gallery = card.querySelector('.gallery');
   const img = card.querySelector('.gallery img');
   const desc = card.querySelector('.variant-desc-small');
   const dots = card.querySelectorAll('.gallery-dots .dot');
   const prevBtn = card.querySelector('.gallery-nav.prev');
   const nextBtn = card.querySelector('.gallery-nav.next');
+
   let currentIndex = 0;
 
-  function showImage(i) {
-    const variant = images[i];
+  function showImage(index) {
+    const variant = images[index];
     img.src = variant.src;
     if (desc) {
       desc.textContent = variant.desc || "";
       desc.style.display = variant.desc ? "block" : "none";
     }
-    dots.forEach((d, n) => d.classList.toggle('active', n === i));
-    currentIndex = i;
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+    currentIndex = index;
+  }
+
+  function nextImage() {
+    showImage((currentIndex + 1) % images.length);
+  }
+
+  function prevImage() {
+    showImage((currentIndex - 1 + images.length) % images.length);
   }
 
   if (nextBtn && prevBtn) {
-    nextBtn.addEventListener('click', e => { e.stopPropagation(); showImage((currentIndex + 1) % images.length); });
-    prevBtn.addEventListener('click', e => { e.stopPropagation(); showImage((currentIndex - 1 + images.length) % images.length); });
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nextImage();
+    });
+
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      prevImage();
+    });
   }
 
-  dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); showImage(i); }));
-
-  card.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') showImage((currentIndex + 1) % images.length);
-    if (e.key === 'ArrowLeft') showImage((currentIndex - 1 + images.length) % images.length);
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showImage(i);
+    });
   });
-}
 
-// === RELOAD PO ZMIANIE JĘZYKA ===
-async function reloadContent() {
-  await loadHairstyles();
+  gallery.addEventListener('click', (e) => {
+    if (e.target.closest('.gallery-nav') || e.target.closest('.gallery-dots')) return;
+    nextImage();
+  });
+
+  card.tabIndex = 0;
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft') prevImage();
+  });
 }
 
 // === START ===
