@@ -335,8 +335,20 @@ window.translateValue = function(value, prefix) {
 };
 
 window.translateArray = function(arr, prefix) {
-  if (!Array.isArray(arr)) return translateValue(arr, prefix);
-  return arr.map(v => translateValue(v, prefix)).join(", ");
+  // Zabezpieczenie: jeśli arr nie jest tablicą → zwróć pusty string
+  if (!Array.isArray(arr)) return "";
+
+  // Przetłumacz i usuń puste
+  const translated = arr
+    .map(v => {
+      if (!v) return null;
+      const translated = translateValue(v.trim(), prefix);
+      return translated !== `filter_${v.trim()}` ? translated : v.trim();
+    })
+    .filter(Boolean);
+
+  // Zwróć połączone przecinkiem
+  return translated.length > 0 ? translated.join(", ") : "";
 };
 
 // === EKSPORT GLOBALNY ===

@@ -1,0 +1,215 @@
+/* admin.css – Z PEŁNĄ KONTROLĄ ZAPISU */
+.admin-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.hairstyles-list {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  min-height: 100px;
+}
+
+.hairstyle-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  cursor: grab;
+  transition: transform 0.2s, box-shadow 0.2s;
+  user-select: none;
+}
+
+.hairstyle-card:active {
+  cursor: grabbing;
+}
+
+.hairstyle-card.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.hairstyle-card.drag-over {
+  border-top: 3px solid #4a9;
+  margin-top: -3px;
+}
+
+.hairstyle-card img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.hairstyle-actions button {
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.editor-form {
+  background: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.image-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.image-row input {
+  padding: 0.5rem;
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 6px;
+}
+
+.remove-image {
+  background: #c33;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+#addImage, .add-btn {
+  background: #4a9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  background: #555;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.save-btn {
+  background: #4a9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Panel zapisu */
+.save-changes-container {
+  text-align: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid #333;
+}
+
+#saveChangesBtn {
+  background: #4a9;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+#saveChangesBtn.enabled {
+  background: #3a8;
+  cursor: pointer;
+  opacity: 1;
+}
+
+#saveChangesBtn.enabled:hover {
+  background: #2a7;
+}
+
+#saveAsBtn {
+  background: #2a7;
+  margin-left: 1rem;
+}
+
+#saveAsBtn:hover {
+  background: #1a6;
+}
+
+#resetFolderBtn {
+  background: #555;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#resetFolderBtn:hover {
+  background: #666;
+}
+
+/* Powiadomienie */
+.save-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4a9;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10000;
+  animation: fadeInOut 2s forwards;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; transform: translateY(10px); }
+  20%, 80% { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edytor Fryzur</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <script src="lang.js"></script>
+  <script src="detect-lang.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="pl">PL</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ua">UA</button>
+    </div>
+    <nav class="top-nav">
+      <a href="index.html" class="nav-link">Katalog</a>
+      <a href="builder.html" class="nav-link">Kreator</a>
+      <a href="admin.html" class="nav-link active">Edytor</a>
+    </nav>
+  </header>
+
+  <main class="admin-container">
+    <h1>Edytor Fryzur</h1>
+
+    <!-- Lista fryzur z drag & drop -->
+    <section class="hairstyles-list" id="hairstylesList" style="min-height: 100px;">
+      <div class="loading">Ładowanie fryzur...</div>
+    </section>
+
+    <!-- Formularz dodawania/edycji -->
+    <section class="editor-form" id="editorForm" style="display: none;">
+      <h2 id="formTitle">Dodaj nową fryzurę</h2>
+      <form id="hairstyleForm">
+        <div class="form-grid">
+          <!-- Nazwa -->
+          <div>
+            <label>Nazwa (PL)</label>
+            <input type="text" id="namePl" required />
+          </div>
+          <div>
+            <label>Nazwa (EN)</label>
+            <input type="text" id="nameEn" required />
+          </div>
+          <div>
+            <label>Nazwa (UA)</label>
+            <input type="text" id="nameUa" required />
+          </div>
+
+          <!-- Długość, Styl -->
+          <div>
+            <label>Długość</label>
+            <select id="length">
+              <option value="short">Krótka</option>
+              <option value="medium">Średnia</option>
+              <option value="long">Długa</option>
+            </select>
+          </div>
+          <div>
+            <label>Styl (można wiele)</label>
+            <div class="checkbox-group" id="styleCheckboxes"></div>
+          </div>
+
+          <!-- Boki, Góra, Grzywka -->
+          <div>
+            <label>Boki (można wiele)</label>
+            <div class="checkbox-group" id="bokiCheckboxes"></div>
+          </div>
+          <div>
+            <label>Góra (można wiele)</label>
+            <div class="checkbox-group" id="goraCheckboxes"></div>
+          </div>
+          <div>
+            <label>Grzywka (można wiele)</label>
+            <div class="checkbox-group" id="grzywkaCheckboxes"></div>
+          </div>
+
+          <!-- Kształt twarzy, Typ włosów -->
+          <div>
+            <label>Kształt twarzy</label>
+            <div class="checkbox-group" id="faceCheckboxes"></div>
+          </div>
+          <div>
+            <label>Typ włosów</label>
+            <div class="checkbox-group" id="hairCheckboxes"></div>
+          </div>
+        </div>
+
+        <!-- Opis -->
+        <div class="form-full">
+          <label>Opis (PL)</label>
+          <textarea id="descPl" rows="3"></textarea>
+        </div>
+        <div class="form-full">
+          <label>Opis (EN)</label>
+          <textarea id="descEn" rows="3"></textarea>
+        </div>
+        <div class="form-full">
+          <label>Opis (UA)</label>
+          <textarea id="descUa" rows="3"></textarea>
+        </div>
+
+        <!-- Zdjęcia -->
+        <div class="form-full">
+          <h3>Zdjęcia wariantów</h3>
+          <div id="imagesContainer">
+            <div class="image-row">
+              <input type="text" placeholder="Klucz (np. high_fade_short_none)" class="image-key" />
+              <input type="text" placeholder="Ścieżka do obrazu" class="image-src" />
+              <input type="text" placeholder="Opis obrazu (PL)" class="image-desc-pl" />
+              <button type="button" class="remove-image">Usuń</button>
+            </div>
+          </div>
+          <button type="button" id="addImage">+ Dodaj wariant zdjęcia</button>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="save-btn">Zapisz fryzurę</button>
+          <button type="button" id="cancelEdit" class="cancel-btn">Anuluj</button>
+        </div>
+      </form>
+    </section>
+
+    <button id="addNewBtn" class="add-btn">+ Dodaj nową fryzurę</button>
+
+    <!-- Przycisk zapisu zmian -->
+    <div class="save-changes-container" id="saveChangesContainer" style="display: none; margin-top: 2rem;">
+      <button id="saveChangesBtn" class="save-btn" disabled>Zapisz zmiany</button>
+      <span id="changesStatus" style="margin-left: 1rem; color: #aaa;"></span>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Katalog Fryzur Męskich – Edytor</p>
+  </footer>
+
+  <script src="admin.js"></script>
+</body>
+</html>
