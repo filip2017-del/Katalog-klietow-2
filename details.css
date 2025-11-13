@@ -15,20 +15,46 @@
   }
 }
 
-/* === GALERIA === */
+/* === KWADRATOWY WRAPPER – ZAWSZE 1:1 === */
 .details-gallery {
   text-align: center;
+  position: relative;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 500px;           /* Maksymalny rozmiar kwadratu na desktopie */
+  margin: 0 auto;             /* Wyśrodkowanie */
+  aspect-ratio: 1 / 1;        /* ZAWSZE KWADRAT */
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border: 1px solid #333;
+  background: #0a0a0a;
 }
 
 #mainImage {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-height: 500px;
-  object-fit: cover;
-  border-radius: 12px;
+  height: 100%;
+  object-fit: cover;          /* Przycina nadmiar, zachowuje proporcje */
+  object-position: center;
   transition: opacity 0.3s ease;
   opacity: 1;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  border: 1px solid #333;
+}
+
+/* === RESPONSIVE – MOBILE === */
+@media (max-width: 768px) {
+  .image-wrapper {
+    max-width: 100%;          /* Pełna szerokość na telefonie */
+    border-radius: 10px;
+  }
+  
+  .details-gallery {
+    margin-bottom: 1.5rem;
+  }
 }
 
 /* === INFORMACJE === */
@@ -131,4 +157,10 @@
   background: rgba(0,0,0,0.3);
   border-radius: 8px;
   display: none;
+}
+
+/* === DODATKOWO: EFEKT ZOOMU PRZY NAJECHANIU (OPCJA) === */
+.image-wrapper:hover #mainImage {
+  transform: scale(1.05);
+  transition: transform 0.4s ease, opacity 0.3s ease;
 }

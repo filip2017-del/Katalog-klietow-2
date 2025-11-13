@@ -61,10 +61,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   populateSelect(selects.style, allStyles, "style");
 
   function getImage(hairstyle, boki, gora, grzywka) {
-    const key = `${boki}_${gora}_${grzywka}`;
-    if (hairstyle.images?.[key]) return hairstyle.images[key];
-    return Object.values(hairstyle.images || {})[0] || { src: DEFAULT_IMAGE };
+  const key = `${boki}_${gora}_${grzywka}`;
+
+  // 1. Najpierw szukaj dokładnego wariantu
+  if (hairstyle.images?.[key]) {
+    return hairstyle.images[key];
   }
+
+  // 2. Jeśli nie ma wariantu – użyj default
+  if (hairstyle.images?.default) {
+    return hairstyle.images.default;
+  }
+
+  // 3. Jeśli nie ma ŻADNEGO zdjęcia – fallback na haircut.jpg
+  return { src: DEFAULT_IMAGE };
+}
 
   async function findMatch() {
     const values = {

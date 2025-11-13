@@ -1,4 +1,4 @@
-// === script.js — wersja zgodna z neutralnym JSON + pełne tłumaczenie ===
+// === script.js — wersja z poprawioną galerią ===
 
 async function loadHairstyles() {
   const res = await fetch("hairstyles.json");
@@ -58,7 +58,7 @@ async function loadValidImages(imageObj) {
   return validImages.length > 0 ? validImages : [{ key: "default", src: DEFAULT_IMAGE, desc: null }];
 }
 
-// === WYBÓR DOMYŚLNEGO OBRAZU Z TABLIC ===
+// === WYBÓR DOMYŚLNEGO OBRAZU ===
 function getDefaultImage(item, validImages) {
   const boki = Array.isArray(item.boki) ? item.boki[0] : item.boki;
   const gora = Array.isArray(item.gora) ? item.gora[0] : item.gora;
@@ -90,30 +90,28 @@ async function displayHairstyles(list) {
     const validImages = await loadValidImages(imageObj);
     const defaultImage = getDefaultImage(item, validImages);
 
-    // === Tłumaczenia ===
     const nameText = typeof item.name === "object" ? (item.name[currentLang] || item.name.pl) : item.name;
     const descText = typeof item.description === "object" ? (item.description[currentLang] || item.description.pl) : item.description;
 
     const lengthTranslated = translateValue(item.length, "filter");
     const styleTranslated = translateArray(item.style, "filter");
 
-    // === Generowanie karty ===
     let galleryHTML = `
       <div class="gallery">
         <img src="${defaultImage.src}" alt="${nameText}" loading="lazy">
     `;
 
+    // POPRAWKA: osobne przyciski zamiast kontenera
     if (validImages.length > 1) {
       galleryHTML += `
-        <div class="gallery-nav">
-          <button class="gallery-nav prev">‹</button>
-          <button class="gallery-nav next">›</button>
-        </div>
+        <button class="gallery-nav prev" aria-label="Poprzednie">‹</button>
+        <button class="gallery-nav next" aria-label="Następne">›</button>
         <div class="gallery-dots">
-          ${validImages.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
+          ${validImages.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('')}
         </div>
       `;
     }
+
     galleryHTML += `</div>`;
 
     card.innerHTML = `
@@ -137,7 +135,7 @@ async function displayHairstyles(list) {
   }
 }
 
-// === GALERIA ===
+// === GALERIA — POPRAWIONA ===
 function initGallery(card, images) {
   const img = card.querySelector('.gallery img');
   const dots = card.querySelectorAll('.gallery-dots .dot');

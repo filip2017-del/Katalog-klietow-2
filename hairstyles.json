@@ -81,9 +81,6 @@
     "images": {
       "default": {
         "src": "./images/pompadour.jpg"
-      },
-      "taper_long_none": {
-        "src": "./images/pompadour_taper.jpg"
       }
     }
   },
@@ -187,6 +184,7 @@
       "classic"
     ],
     "boki": [
+      "mid_fade",
       "taper"
     ],
     "gora": [
@@ -212,7 +210,10 @@
         "src": "./images/side_part.jpg"
       },
       "taper_short_side": {
-        "src": "./images/side_part_taper.jpg"
+        "src": "./images/side_part_2.jpg"
+      },
+      "mid_fade_short_side": {
+        "src": "./images/side_part.jpg"
       }
     }
   },
@@ -298,12 +299,6 @@
     "images": {
       "default": {
         "src": "./images/textured_fringe.jpg"
-      },
-      "mid_fade_textured_textured": {
-        "src": "./images/textured_fringe_mid.jpg"
-      },
-      "low_fade_textured_textured": {
-        "src": "./images/textured_fringe_low.jpg"
       }
     }
   },
