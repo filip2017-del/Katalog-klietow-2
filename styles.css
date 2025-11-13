@@ -152,3 +152,32 @@ footer {
   .filters select { min-width:auto; }
   .builder-container { grid-template-columns:1fr; }
 }
+
+/* === TYTUŁ STRONY – POZA MENU, PRZEWIJANY === */
+.page-title {
+  text-align: center;
+  margin: 2rem 0 1.5rem;
+  font-size: 2.1rem;
+  color: #fff;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.8rem;
+    margin: 1.5rem 0 1rem;
+  }
+}
+.lang-switch {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 0.4rem;
+  z-index: 1001;
+}
+
+.lang-btn {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+}

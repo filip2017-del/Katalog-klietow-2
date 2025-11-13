@@ -5,76 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Katalog fryzur męskich</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="lang.js" defer></script>
 </head>
 <body>
   <header>
     <nav class="top-nav">
-      <a href="index.html" class="nav-link active">Katalog fryzur</a>
-      <a href="builder.html" class="nav-link">Wybierz swoją fryzurę</a>
+      <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog fryzur</a>
+      <a href="builder.html" class="nav-link" data-key="nav_builder">Wybierz swoją fryzurę</a>
     </nav>
-    <h1>Katalog fryzur męskich</h1>
+    
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="pl">PL</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ua">UA</button>
+    </div>
   </header>
 
+  <h1 class="page-title" data-key="page_title">Katalog fryzur męskich</h1>
+
   <section class="filters">
-    <select id="lengthFilter">
-      <option value="">Długość włosów</option>
-      <option value="krótkie">Krótkie</option>
-      <option value="średnie">Średnie</option>
-      <option value="długie">Długie</option>
-    </select>
+    <div class="filter-group">
+      <label for="lengthFilter" data-key="filter_length">Długość włosów</label>
+      <select id="lengthFilter">
+        <option value="">Dowolne</option>
+        <option value="krótkie">Krótkie</option>
+        <option value="średnie">Średnie</option>
+        <option value="długie">Długie</option>
+      </select>
+    </div>
 
-    <select id="styleFilter">
-      <option value="">Styl</option>
-      <option value="klasyczny">Klasyczny</option>
-      <option value="nowoczesny">Nowoczesny</option>
-      <option value="sportowy">Sportowy</option>
-      <option value="alternatywny">Alternatywny</option>
-      <option value="retro">Retro</option>
-      <option value="naturalny">Naturalny</option>
-      <option value="wojskowy">Wojskowy</option>
-    </select>
+    <div class="filter-group">
+      <label for="styleFilter" data-key="filter_style">Styl</label>
+      <select id="styleFilter">
+        <option value="">Dowolne</option>
+        <option value="klasyczny">Klasyczny</option>
+        <option value="nowoczesny">Nowoczesny</option>
+        <option value="sportowy">Sportowy</option>
+        <option value="alternatywny">Alternatywny</option>
+        <option value="retro">Retro</option>
+        <option value="naturalny">Naturalny</option>
+        <option value="wojskowy">Wojskowy</option>
+      </select>
+    </div>
 
-    <select id="faceFilter">
-      <option value="">Kształt twarzy</option>
-      <option value="owalna">Owalna</option>
-      <option value="okrągła">Okrągła</option>
-      <option value="kwadratowa">Kwadratowa</option>
-      <option value="trójkątna">Trójkątna</option>
-      <option value="diamentowa">Diamentowa</option>
-    </select>
+    <div class="filter-group">
+      <label for="faceFilter" data-key="filter_face">Kształt twarzy</label>
+      <select id="faceFilter">
+        <option value="">Dowolne</option>
+        <option value="owalna">Owalna</option>
+        <option value="okrągła">Okrągła</option>
+        <option value="kwadratowa">Kwadratowa</option>
+        <option value="trójkątna">Trójkątna</option>
+        <option value="diamentowa">Diamentowa</option>
+      </select>
+    </div>
   </section>
 
   <main id="hairstyleContainer" class="grid"></main>
 
   <footer>
-    <p>© 2025 Katalog Fryzur Męskich</p>
+    <p data-key="footer">© 2025 Katalog Fryzur Męskich</p>
   </footer>
 
-  <!-- Skrypt katalogu -->
   <script src="script.js"></script>
-
-  <!-- Skrypt chowającego się menu -->
-  <script>
-    // === CHOWAJ MENU PRZY SCROLLU W DÓŁ ===
-    let lastScroll = 0;
-    const header = document.querySelector('header');
-    const headerHeight = header.offsetHeight;
-
-    window.addEventListener('load', () => {
-      lastScroll = window.pageYOffset;
-
-      window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll > lastScroll && currentScroll > headerHeight) {
-          header.classList.add('hidden');
-        } else if (currentScroll < lastScroll) {
-          header.classList.remove('hidden');
-        }
-
-        lastScroll = currentScroll;
-      });
-    });
-  </script>
 </body>
 </html>

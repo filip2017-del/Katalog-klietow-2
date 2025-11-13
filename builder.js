@@ -1,4 +1,14 @@
+// === builder.js (pełna poprawiona wersja z tłumaczeniem i dynamicznymi opcjami) ===
 document.addEventListener("DOMContentLoaded", async () => {
+  // Czekamy na lang.js
+  if (typeof updateLanguage !== "function") {
+    console.warn("lang.js nie załadowany – czekam...");
+    await new Promise(resolve => {
+      const check = () => (typeof updateLanguage === "function" ? resolve() : setTimeout(check, 50));
+      check();
+    });
+  }
+
   const bokiSelect = document.getElementById("bokiSelect");
   const goraSelect = document.getElementById("goraSelect");
   const grzywkaSelect = document.getElementById("grzywkaSelect");
@@ -18,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentMatch = null;
   const DEFAULT_IMAGE = "./images/haircut.jpg";
 
-  // === 1. ŁADOWANIE DANYCH ===
+  // === 1. ŁADOWANIE hairstyles.json ===
   try {
     const res = await fetch("hairstyles.json");
     if (!res.ok) throw new Error("Nie można załadować hairstyles.json");
@@ -29,7 +39,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // === 2. WALIDACJA ZDJĘĆ DLA WARIANTÓW ===
+  // === 2. ZBIERANIE UNIKALNYCH WARTOŚCI Z DANYCH ===
+  const unique = (arr) => [...new Set(arr.filter(Boolean))];
+
+  const allBoki = unique(hairstyles.map(h => h.boki));
+  const allGora = unique(hairstyles.map(h => h.gora));
+  const allGrzywka = unique(hairstyles.map(h => h.grzywka));
+  const allStyles = unique(hairstyles.map(h => h.style));
+
+  // === 3. MAPA TŁUMACZEŃ WARIANTÓW (tak jak w details.js) ===
+  const variantMap = {
+    boki: {
+      "taper": "Taper", "low fade": "Low Fade", "mid fade": "Mid Fade",
+      "high fade": "variant_high_fade", "burst fade": "Burst Fade",
+      "undercut": "variant_undercut", "średnie": "Średnie boki", "długie": "Długie boki"
+    },
+    gora: {
+      "krótka": "Krótka", "luźna": "variant_loose", "klasyczna": "Klasyczna",
+      "długa": "Długa", "tekstura": "variant_textured", "quiff": "Quiff",
+      "pompadour": "Pompadour"
+    },
+    grzywka: {
+      "brak": "variant_none", "prosta": "Prosta", "curtain": "variant_curtain",
+      "tekstura": "variant_textured", "side": "variant_side"
+    },
+    style: {
+      "klasyczny": "filter_classic", "nowoczesny": "filter_modern",
+      "sportowy": "filter_sport", "retro": "filter_retro",
+      "naturalny": "filter_natural", "alternatywny": "filter_alternative"
+    }
+  };
+
+  // === 4. TŁUMACZENIE WARTOŚCI ===
+  function translateVariant(value, type) {
+    if (!value) return value;
+    const map = variantMap[type];
+    if (!map) return value;
+    const key = value.toString().trim().toLowerCase();
+    const translationKey = map[key];
+    return translationKey ? t(translationKey) : value;
+  }
+
+  // === 5. WYPEŁNIANIE SELECTÓW DYNAMICZNIE ===
+  function populateSelect(select, options, type) {
+    select.innerHTML = `<option value="">${t("filter_any")}</option>`;
+    options.forEach(opt => {
+      const translated = translateVariant(opt, type);
+      const option = document.createElement("option");
+      option.value = opt;
+      option.textContent = translated;
+      select.appendChild(option);
+    });
+  }
+
+  populateSelect(bokiSelect, allBoki, "boki");
+  populateSelect(goraSelect, allGora, "gora");
+  populateSelect(grzywkaSelect, allGrzywka, "grzywka");
+  populateSelect(styleSelect, allStyles, "style");
+
+  // === 6. TŁUMACZENIE ETYKIET ===
+  function translateLabels() {
+    document.querySelectorAll(".control-group h3").forEach(h3 => {
+      const text = h3.textContent.trim();
+      if (text === "Boki") h3.textContent = t("builder_sides");
+      if (text === "Góra") h3.textContent = t("builder_top");
+      if (text === "Grzywka") h3.textContent = t("builder_bangs");
+      if (text === "Styl") h3.textContent = t("builder_style");
+    });
+    const resultH3 = document.querySelector(".result h3");
+    if (resultH3) resultH3.textContent = t("builder_match");
+  }
+
+  // === 7. WALIDACJA ZDJĘĆ ===
   async function validateVariants(item) {
     const imageObj = item.images || {};
     const variants = [];
@@ -38,8 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = imageObj[key];
       const src = typeof data === "string" ? data : data.src;
       const desc = typeof data === "object" ? data.desc : null;
-
-      if (!src || src.trim() === "") continue;
+      if (!src?.trim()) continue;
 
       const parts = key.split("_");
       if (parts.length !== 3) continue;
@@ -49,9 +129,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (variants.length === 0) {
-      const fallbackKey = `${item.boki || "brak"}_${item.gora || "krótka"}_${item.grzywka || "brak"}`;
       variants.push({
-        key: fallbackKey,
+        key: `${item.boki || "brak"}_${item.gora || "krótka"}_${item.grzywka || "brak"}`,
         boki: item.boki || "brak",
         gora: item.gora || "krótka",
         grzywka: item.grzywka || "brak",
@@ -66,20 +145,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         validated.push(v);
         continue;
       }
-
       const img = new Image();
       img.src = v.src;
-
       const loaded = await new Promise(resolve => {
         img.onload = () => resolve(true);
         img.onerror = () => resolve(false);
         setTimeout(() => resolve(false), 5000);
       });
-
       if (loaded) validated.push(v);
     }
 
-    if (validated.length === 0) {
+    if (validated.length === 0 && variants.length > 0) {
       const fallback = variants[0];
       fallback.src = DEFAULT_IMAGE;
       validated.push(fallback);
@@ -88,7 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return validated;
   }
 
-  // === 3. ZNAJDŹ NAJLEPSZE DOPASOWANIE ===
+  // === 8. ZNAJDŹ DOPASOWANIE ===
   async function findMatch() {
     const boki = bokiSelect.value;
     const gora = goraSelect.value;
@@ -96,22 +172,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const styl = styleSelect.value;
 
     const matches = hairstyles.filter(item => {
-      const matchBoki = !boki || item.boki === boki;
-      const matchGora = !gora || item.gora === gora;
-      const matchGrzywka = !grzywka || item.grzywka === grzywka;
-      const matchStyl = !styl || item.style === styl;
-      return matchBoki && matchGora && matchGrzywka && matchStyl;
+      return (!boki || item.boki === boki) &&
+             (!gora || item.gora === gora) &&
+             (!grzywka || item.grzywka === grzywka) &&
+             (!styl || item.style === styl);
     });
 
     if (matches.length === 0) {
       resultSection.style.display = "block";
       resultCard.style.display = "none";
       noMatch.style.display = "block";
+      noMatch.textContent = t("builder_no_match");
       viewDetailsBtn.style.display = "none";
       return;
     }
 
-    // Najlepsze dopasowanie (najwięcej zgodnych pól)
     currentMatch = matches.reduce((best, curr) => {
       const bestScore = (!boki || best.boki === boki ? 1 : 0) +
                         (!gora || best.gora === gora ? 1 : 0) +
@@ -134,11 +209,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     noMatch.style.display = "none";
     viewDetailsBtn.style.display = "block";
 
-    resultName.textContent = currentMatch.name;
-    resultDesc.textContent = currentMatch.description;
+    const nameText = typeof currentMatch.name === "object" ? (currentMatch.name[currentLang] || currentMatch.name.pl) : currentMatch.name;
+    const descText = typeof currentMatch.description === "object" ? (currentMatch.description[currentLang] || currentMatch.description.pl) : currentMatch.description;
 
-    // Spinner + płynne zdjęcie
+    resultName.textContent = nameText;
+    resultDesc.textContent = descText;
+    viewDetailsBtn.textContent = t("builder_view_details");
+
+    // Spinner
     loadingSpinner.style.display = "block";
+    loadingSpinner.textContent = t("loading");
     previewImg.style.opacity = 0;
 
     const newImg = new Image();
@@ -160,25 +240,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     if (variant.desc) {
-      variantDesc.textContent = variant.desc;
+      const descText = typeof variant.desc === "object" ? (variant.desc[currentLang] || variant.desc.pl) : variant.desc;
+      variantDesc.textContent = descText;
       variantDesc.style.display = "block";
     } else {
       variantDesc.style.display = "none";
     }
+
+    updateLanguage();
   }
 
-  // === 4. NASŁUCHIWANIE ZMIAN ===
+  // === 9. OBSŁUGA ZMIAN ===
   [bokiSelect, goraSelect, grzywkaSelect, styleSelect].forEach(sel => {
     sel.addEventListener("change", findMatch);
   });
 
-  // === 5. ZOBACZ SZCZEGÓŁY ===
   viewDetailsBtn.addEventListener("click", () => {
     if (!currentMatch) return;
     localStorage.setItem("selectedHairstyle", JSON.stringify(currentMatch));
     window.location.href = "details.html";
   });
 
-  // === 6. INICJALIZACJA ===
+  // === 10. OBSŁUGA ZMIANY JĘZYKA ===
+  window.addEventListener("languageChanged", () => {
+    populateSelect(bokiSelect, allBoki, "boki");
+    populateSelect(goraSelect, allGora, "gora");
+    populateSelect(grzywkaSelect, allGrzywka, "grzywka");
+    populateSelect(styleSelect, allStyles, "style");
+    translateLabels();
+    findMatch();
+  });
+
+  // === 11. INICJALIZACJA ===
+  translateLabels();
   findMatch();
+  updateLanguage();
 });
