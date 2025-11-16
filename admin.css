@@ -308,3 +308,23 @@
 .remove-image:hover {
   background: #a33;
 }
+
+/* Formularz pod kartą – wcięcie i tło */
+#hairstylesList > .editor-form {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 2px solid #4a9;
+  box-shadow: 0 4px 12px rgba(74, 153, 0, 0.2);
+}
+
+#hairstylesList > .editor-form::before {
+  content: "Edytujesz tę fryzurę";
+  display: block;
+  text-align: center;
+  color: #4a9;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}

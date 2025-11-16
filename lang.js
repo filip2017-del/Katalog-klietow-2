@@ -2,6 +2,10 @@
 
 const translations = {
   pl: {
+    matcher_best: "Najlepszy wybór dla Ciebie",
+    matcher_title: "Matcher",
+    matcher_results: "Twoje matchy",
+    matcher_restart: "Spróbuj ponownie",
     // --- Nawigacja i strona główna ---
     nav_catalog: "Katalog fryzur",
     nav_builder: "Wybierz swoją fryzurę",
@@ -79,6 +83,10 @@ const translations = {
     footer: "© 2025 Katalog Fryzur Męskich"
   },
   en: {
+    matcher_best: "Best match for you!",
+    matcher_title: "Matcher",
+    matcher_results: "Your match",
+    matcher_restart: "Try again",
     nav_catalog: "Hairstyle Catalog",
     nav_builder: "Build Your Hairstyle",
     page_title: "Men's Hairstyle Catalog",

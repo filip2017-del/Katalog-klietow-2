@@ -1,69 +1,14 @@
 [
   {
     "name": {
-      "pl": "Buzz Cut",
-      "en": "Buzz Cut",
-      "ua": "Базз Кат"
-    },
-    "length": "short",
-    "style": [
-      "modern",
-      "sport"
-    ],
-    "boki": [
-      "high_fade",
-      "mid_fade",
-      "low_fade"
-    ],
-    "gora": [
-      "short"
-    ],
-    "grzywka": [
-      "none",
-      "straight"
-    ],
-    "faceShapes": [
-      "oval",
-      "square"
-    ],
-    "hairType": [
-      "straight",
-      "wavy",
-      "curly"
-    ],
-    "description": {
-      "pl": "Bardzo krótka fryzura o równomiernej długości. Nie wymaga stylizacji.",
-      "en": "A very short hairstyle with an even length. Requires no styling.",
-      "ua": "Дуже коротка зачіска рівної довжини. Не потребує укладки."
-    },
-    "images": {
-      "high_fade_short_straight": {
-        "src": "./images/buzz_cut.jpg",
-        "desc": {
-          "pl": "Buzz Cut z high fade"
-        }
-      },
-      "high_fade_short_none": {
-        "src": "./images/buzz_cut2.jpg",
-        "desc": {
-          "pl": "Buzz Cut z high fade 2"
-        }
-      },
-      "default": {
-        "src": "./images/buzz_cut2.jpg",
-        "desc": {
-          "pl": "Opis domyślny"
-        }
-      }
-    }
-  },
-  {
-    "name": {
       "pl": "Pompadour",
       "en": "Pompadour",
       "ua": "Помпадур"
     },
-    "length": "medium",
+    "length": [
+      "short",
+      "medium"
+    ],
     "style": [
       "classic",
       "retro"
@@ -102,11 +47,67 @@
   },
   {
     "name": {
+      "pl": "Buzz Cut",
+      "en": "Buzz Cut",
+      "ua": "Базз Кат"
+    },
+    "length": [
+      "short"
+    ],
+    "style": [
+      "modern",
+      "sport"
+    ],
+    "boki": [
+      "high_fade",
+      "mid_fade",
+      "low_fade"
+    ],
+    "gora": [
+      "short"
+    ],
+    "grzywka": [
+      "none",
+      "straight"
+    ],
+    "faceShapes": [
+      "oval",
+      "square"
+    ],
+    "hairType": [
+      "straight",
+      "wavy",
+      "curly"
+    ],
+    "description": {
+      "pl": "Bardzo krótka fryzura o równomiernej długości. Nie wymaga stylizacji.",
+      "en": "A very short hairstyle with an even length. Requires no styling.",
+      "ua": "Дуже коротка зачіска рівної довжини. Не потребує укладки."
+    },
+    "images": {
+      "high_fade_short_straight": {
+        "src": "./images/buzz_cut2.jpg",
+        "desc": {
+          "pl": "Buzz Cut z high fade"
+        }
+      },
+      "low_fade_short_none": {
+        "src": "./images/buzz_cut.jpg",
+        "desc": {
+          "pl": "Buzz Cut z high fade 2"
+        }
+      }
+    }
+  },
+  {
+    "name": {
       "pl": "Curtain Bangs",
       "en": "Curtain Bangs",
       "ua": "Чубчик-Куртина"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "modern",
       "retro"
@@ -150,7 +151,7 @@
         }
       },
       "taper_medium_curtain": {
-        "src": "./images/haircut.jpg",
+        "src": "./images/curtain_bangs3.jpg",
         "desc": {
           "pl": "Opis domyślny"
         }
@@ -163,7 +164,9 @@
       "en": "Taper fluffy hair",
       "ua": "Taper fluffy hair"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "modern"
     ],
@@ -188,9 +191,9 @@
       "curly"
     ],
     "description": {
-      "pl": "",
-      "en": "",
-      "ua": ""
+      "pl": "Nowoczesna fryzura z taperem i puszystym topem średniej długości. Idealna do falowanych/kręconych włosów, pasuje do twarzy owalnej i okrągłej.",
+      "en": "Modern taper haircut with fluffy, medium-length top. Best for wavy/curly hair, suits oval and round faces.",
+      "ua": "Сучасна стрижка з taper та пухнастим верхом середньої довжини. Ідеально для хвилястого/кучерявого волосся, підходить до овального та круглого обличчя."
     },
     "images": {
       "default": {
@@ -204,7 +207,9 @@
       "en": "Crop (French Crop)",
       "ua": "Кроп (Французький Кроп)"
     },
-    "length": "short",
+    "length": [
+      "short"
+    ],
     "style": [
       "modern"
     ],
@@ -260,7 +265,9 @@
       "en": "Side Part",
       "ua": "Бічний Проділ"
     },
-    "length": "short",
+    "length": [
+      "short"
+    ],
     "style": [
       "classic"
     ],
@@ -307,7 +314,9 @@
       "en": "Textured Fringe",
       "ua": "Текстурована Чубчик"
     },
-    "length": "short",
+    "length": [
+      "short"
+    ],
     "style": [
       "modern"
     ],
@@ -356,7 +365,9 @@
       "en": "Quiff",
       "ua": "Квіфф"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "modern",
       "retro"
@@ -388,13 +399,10 @@
     },
     "images": {
       "default": {
-        "src": "./images/quiff.jpg"
-      },
-      "mid_fade_long_side": {
-        "src": "./images/quiff_mid.jpg"
-      },
-      "taper_voluminous_textured": {
-        "src": "./images/quiff_taper_textured.jpg"
+        "src": "./images/quiff.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -404,7 +412,10 @@
       "en": "Wolf cut",
       "ua": "Вулф Кат"
     },
-    "length": "medium",
+    "length": [
+      "medium",
+      "long"
+    ],
     "style": [
       "modern",
       "alternative"
@@ -421,7 +432,10 @@
     },
     "images": {
       "default": {
-        "src": "./images/wolf_cut.jpg"
+        "src": "./images/wolf_cut.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -431,7 +445,9 @@
       "en": "Man Bun",
       "ua": "Мужній Пучок"
     },
-    "length": "long",
+    "length": [
+      "long"
+    ],
     "style": [
       "alternative"
     ],
@@ -469,7 +485,9 @@
       "en": "Mod Cut",
       "ua": "Мод Кат"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "modern",
       "retro"
@@ -511,7 +529,9 @@
       "en": "Slick Back",
       "ua": "Слік Бек"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "classic"
     ],
@@ -548,7 +568,9 @@
       "en": "Modern mullet",
       "ua": "Modern mullet"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "modern"
     ],
@@ -567,9 +589,9 @@
     "faceShapes": [],
     "hairType": [],
     "description": {
-      "pl": "",
-      "en": "",
-      "ua": ""
+      "pl": "Nowoczesny mullet z cieniowanymi bokami i dłuższym, teksturowanym tyłem, idealny do prostych lub falowanych włosów na twarz owalną, kwadratową lub w kształcie serca.",
+      "en": "Modern mullet with tapered sides and longer textured back, perfect for straight or wavy hair on oval, square, or heart-shaped faces.",
+      "ua": "Сучасний маллет з затейпереними боками та довшим текстурованим потилицею, ідеальний для прямого чи хвилястого волосся на овальне, квадратне або серцеподібне обличчя."
     },
     "images": {
       "default": {
@@ -583,7 +605,9 @@
       "en": "Undercut",
       "ua": "Андеркат"
     },
-    "length": "medium",
+    "length": [
+      "medium"
+    ],
     "style": [
       "modern",
       "alternative"
@@ -624,7 +648,9 @@
       "en": "Flat top",
       "ua": "Flat top"
     },
-    "length": "short",
+    "length": [
+      "short"
+    ],
     "style": [
       "alternative",
       "military"
@@ -648,9 +674,9 @@
       "wavy"
     ],
     "description": {
-      "pl": "",
-      "en": "",
-      "ua": ""
+      "pl": "Klasyczny flat top z bardzo krótkimi, wycieniowanymi bokami i płaską, równą górą, idealny do prostych i sztywnych włosów na twarz owalną, kwadratową lub diamentową.",
+      "en": "Classic flat top with high skin-faded sides and short, level top, perfect for straight coarse hair on oval, square, or diamond faces.",
+      "ua": "Класичний flat top з високо виголеними боками та коротким рівним верхом, ідеальний для прямого жорсткого волосся на овальне, квадратне або діамантове обличчя."
     },
     "images": {
       "default": {
@@ -664,7 +690,9 @@
       "en": "Crew Cut",
       "ua": "Крю Кат"
     },
-    "length": "short",
+    "length": [
+      "short"
+    ],
     "style": [
       "classic"
     ],
@@ -699,13 +727,16 @@
   },
   {
     "name": {
-      "pl": "test",
-      "en": "fvb",
-      "ua": "bdf"
+      "pl": "Shag",
+      "en": "Shag",
+      "ua": "Shag"
     },
-    "length": "short",
+    "length": [
+      "medium"
+    ],
     "style": [
-      "classic"
+      "retro",
+      "modern"
     ],
     "boki": [
       "high_fade"
@@ -721,13 +752,16 @@
       "wavy"
     ],
     "description": {
-      "pl": "",
-      "en": "",
-      "ua": ""
+      "pl": "Shag z warstwami i teksturą, cieniowanymi bokami oraz grzywką curtain lub choppy, idealny do każdego typu włosów na twarz owalną, podłużną lub w kształcie serca.",
+      "en": "Shag with layers and texture, tapered sides, and curtain or choppy bangs, perfect for any hair type on oval, long, or heart-shaped faces.",
+      "ua": "Шег з шарами та текстурою, затейпереними боками та чубчиком curtain або choppy, ідеальний для будь-якого типу волосся на овальне, видовжене або серцеподібне обличчя."
     },
     "images": {
       "default": {
-        "src": "./images/haircut.jpg"
+        "src": "./images/shag.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   }

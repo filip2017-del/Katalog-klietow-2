@@ -1,8 +1,18 @@
-// === script.js — wersja z poprawioną galerią ===
+// === script.js — WERSJA Z POPRAWIONYM FILTREM DŁUGOŚCI + TŁUMACZENIEM ===
 
 async function loadHairstyles() {
   const res = await fetch("hairstyles.json");
   const data = await res.json();
+
+  // NORMALIZACJA: wszystkie pola to tablice
+  data.forEach(item => {
+    if (!Array.isArray(item.length)) item.length = item.length ? [item.length] : [];
+    if (!Array.isArray(item.style)) item.style = item.style ? [item.style] : [];
+    if (!Array.isArray(item.faceShapes)) item.faceShapes = item.faceShapes ? [item.faceShapes] : [];
+    if (!Array.isArray(item.boki)) item.boki = item.boki ? [item.boki] : [];
+    if (!Array.isArray(item.gora)) item.gora = item.gora ? [item.gora] : [];
+    if (!Array.isArray(item.grzywka)) item.grzywka = item.grzywka ? [item.grzywka] : [];
+  });
 
   const lengthFilter = document.getElementById("lengthFilter");
   const styleFilter = document.getElementById("styleFilter");
@@ -14,9 +24,9 @@ async function loadHairstyles() {
     const faceVal = faceFilter.value;
 
     const filtered = data.filter(item => {
-      const matchLength = !lengthVal || item.length === lengthVal;
-      const matchStyle = !styleVal || (Array.isArray(item.style) ? item.style.includes(styleVal) : item.style === styleVal);
-      const matchFace = !faceVal || (Array.isArray(item.faceShapes) ? item.faceShapes.includes(faceVal) : item.faceShapes === faceVal);
+      const matchLength = !lengthVal || item.length.includes(lengthVal);
+      const matchStyle = !styleVal || item.style.includes(styleVal);
+      const matchFace = !faceVal || item.faceShapes.includes(faceVal);
       return matchLength && matchStyle && matchFace;
     });
 
@@ -93,15 +103,15 @@ async function displayHairstyles(list) {
     const nameText = typeof item.name === "object" ? (item.name[currentLang] || item.name.pl) : item.name;
     const descText = typeof item.description === "object" ? (item.description[currentLang] || item.description.pl) : item.description;
 
-    const lengthTranslated = translateValue(item.length, "filter");
-    const styleTranslated = translateArray(item.style, "filter");
+    // POPRAWKA: Tłumaczenie tablicy length i style
+    const lengthTranslated = translateArray(item.length, "filter") || "?";
+    const styleTranslated = translateArray(item.style, "filter") || "brak stylu";
 
     let galleryHTML = `
       <div class="gallery">
         <img src="${defaultImage.src}" alt="${nameText}" loading="lazy">
     `;
 
-    // POPRAWKA: osobne przyciski zamiast kontenera
     if (validImages.length > 1) {
       galleryHTML += `
         <button class="gallery-nav prev" aria-label="Poprzednie">‹</button>

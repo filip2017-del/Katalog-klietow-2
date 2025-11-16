@@ -31,8 +31,8 @@
       <div class="loading">Ładowanie fryzur...</div>
     </section>
 
-    <!-- Formularz dodawania/edycji -->
-    <section class="editor-form" id="editorForm" style="display: none;">
+    <!-- Szablon formularza edycji (ukryty) -->
+    <section class="editor-form" id="editorFormTemplate" style="display: none;">
       <h2 id="formTitle">Dodaj nową fryzurę</h2>
       <form id="hairstyleForm">
         <div class="form-grid">
@@ -52,13 +52,9 @@
 
           <!-- Długość, Styl -->
           <div>
-            <label>Długość</label>
-            <select id="length">
-              <option value="short">Krótka</option>
-              <option value="medium">Średnia</option>
-              <option value="long">Długa</option>
-            </select>
-          </div>
+<label>Długość (można wiele)</label>
+<div class="checkbox-group" id="lengthCheckboxes"></div>
+</div>
           <div>
             <label>Styl (można wiele)</label>
             <div class="checkbox-group" id="styleCheckboxes"></div>
@@ -138,5 +134,5 @@
   </footer>
 
   <script src="admin.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99f829c36b72b626',t:'MTc2MzMwODQyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

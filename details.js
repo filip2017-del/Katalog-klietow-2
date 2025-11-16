@@ -1,4 +1,4 @@
-// === details.js – Z PRZYWRÓCONYMI SELECTAMI WARIANTÓW + KWADRATOWE ZDJĘCIE ===
+// === details.js – POPRAWIONE TŁUMACZENIE DŁUGOŚCI + TABLICE + LOGIKA ZDJĘĆ ===
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Czekaj na tłumaczenia
@@ -23,10 +23,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     ? (item.description[currentLang] || item.description.pl || "")
     : item.description || "";
 
-  // === OPCJE WARIANTÓW (zawsze tworzone, nawet jeśli 1 opcja) ===
-  const bokiOptions = Array.isArray(item.boki) ? item.boki.map(v => String(v).trim()) : [String(item.boki || "default").trim()];
-  const goraOptions = Array.isArray(item.gora) ? item.gora.map(v => String(v).trim()) : [String(item.gora || "default").trim()];
-  const grzywkaOptions = Array.isArray(item.grzywka) ? item.grzywka.map(v => String(v).trim()) : [String(item.grzywka || "default").trim()];
+  // === NORMALIZACJA TABLIC (bezpieczeństwo) ===
+  const normalizeArray = (val) => Array.isArray(val) ? val : (val ? [val] : []);
+
+  const lengthArr = normalizeArray(item.length);
+  const styleArr = normalizeArray(item.style);
+  const faceArr = normalizeArray(item.faceShapes);
+  const hairArr = normalizeArray(item.hairType);
+
+  const bokiOptions = normalizeArray(item.boki);
+  const goraOptions = normalizeArray(item.gora);
+  const grzywkaOptions = normalizeArray(item.grzywka);
 
   const allImages = item.images || {};
   const DEFAULT_FALLBACK = "./images/haircut.jpg";
@@ -37,7 +44,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     return src.trim() !== "";
   });
 
-  // Jeśli fryzura nie ma ŻADNEGO zdjęcia → tylko haircut.jpg + brak selectów
+  // === TŁUMACZENIA DLA PÓL ===
+  const lengthTranslated = translateArray(lengthArr, "filter") || "?";
+  const styleTranslated = translateArray(styleArr, "filter") || "brak stylu";
+  const faceTranslated = translateArray(faceArr, "filter") || "dowolny";
+  const hairTranslated = translateArray(hairArr, "hair") || "dowolny";
+
+  // === Jeśli brak zdjęć – tylko fallback + brak selectów ===
   if (!hasAnyImage) {
     container.innerHTML = `
       <section class="details-gallery">
@@ -49,10 +62,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       <section class="details-info">
         <h2>${nameText}</h2>
         <div class="variant-controls" style="display:none;"></div>
-        <p><strong data-key="details_length">${t("details_length")}</strong> ${translateValue(item.length, "filter")}</p>
-        <p><strong data-key="details_style">${t("details_style")}</strong> ${translateArray(item.style, "filter")}</p>
-        <p><strong data-key="details_face">${t("details_face")}</strong> ${translateArray(item.faceShapes, "filter")}</p>
-        <p><strong data-key="details_hair">${t("details_hair")}</strong> ${translateArray(item.hairType, "hair")}</p>
+        <p><strong data-key="details_length">${t("details_length")}</strong> ${lengthTranslated}</p>
+        <p><strong data-key="details_style">${t("details_style")}</strong> ${styleTranslated}</p>
+        <p><strong data-key="details_face">${t("details_face")}</strong> ${faceTranslated}</p>
+        <p><strong data-key="details_hair">${t("details_hair")}</strong> ${hairTranslated}</p>
         <p>${descText}</p>
         <button id="backBtn" class="back-btn" data-key="back_button">${t("back_button")}</button>
       </section>
@@ -63,22 +76,73 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // === BUDOWANIE WARIANTÓW Z PRIORYTETEM: konkretny → default → haircut.jpg ===
+  // === POMOCNICZA FUNKCJA: znajdź pierwsze dostępne zdjęcie ===
+  const getFirstAvailableImage = (imagesObj) => {
+    for (const key in imagesObj) {
+      const img = imagesObj[key];
+      const src = typeof img === "string" ? img : (img.src || "");
+      if (src && src.trim() !== "") {
+        return { src, desc: typeof img === "object" ? img.desc : null };
+      }
+    }
+    return null;
+  };
+
+  // === BUDOWANIE WARIANTÓW Z PEŁNĄ LOGIKĄ ZDJĘĆ ===
   const variants = [];
   for (const b of bokiOptions) {
     for (const g of goraOptions) {
       for (const gr of grzywkaOptions) {
         const key = `${b}_${g}_${gr}`;
-        const imageData = allImages[key] || allImages.default || {};
-        const src = (typeof imageData === "string" ? imageData : imageData.src) || DEFAULT_FALLBACK;
-        const desc = typeof imageData === "object" ? imageData.desc : null;
+
+        let imageData = allImages[key];
+        let src = "";
+        let desc = null;
+
+        // 1. Sprawdź konkretny wariant
+        if (imageData) {
+          src = typeof imageData === "string" ? imageData : (imageData.src || "");
+          desc = typeof imageData === "object" ? imageData.desc : null;
+        }
+
+        // 2. Jeśli brak → sprawdź default
+        if (!src && allImages.default) {
+          const def = allImages.default;
+          src = typeof def === "string" ? def : (def.src || "");
+          desc = typeof def === "object" ? def.desc : null;
+        }
+
+        // 3. Jeśli nadal brak → pierwsze dostępne zdjęcie
+        if (!src) {
+          const first = getFirstAvailableImage(allImages);
+          if (first) {
+            src = first.src;
+            desc = first.desc;
+          }
+        }
+
+        // 4. Ostateczny fallback
+        if (!src) {
+          src = DEFAULT_FALLBACK;
+        }
 
         variants.push({ boki: b, gora: g, grzywka: gr, key, src, desc });
       }
     }
   }
 
-  const defaultVariant = variants[0] || { src: DEFAULT_FALLBACK };
+  // === DOMYŚLNY WARIANT (z gwarancją zdjęcia) ===
+  let defaultVariant = variants[0];
+  if (!defaultVariant || !defaultVariant.src) {
+    const firstImg = getFirstAvailableImage(allImages);
+    defaultVariant = {
+      src: firstImg?.src || DEFAULT_FALLBACK,
+      desc: firstImg?.desc || null,
+      boki: bokiOptions[0] || "",
+      gora: goraOptions[0] || "",
+      grzywka: grzywkaOptions[0] || ""
+    };
+  }
 
   const unique = arr => [...new Set(arr)];
   const uniqueBoki = unique(bokiOptions);
@@ -91,7 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     grzywka: t("builder_bangs")
   };
 
-  // === HTML Z KWADRATOWYM ZDJĘCIEM + SELECTY ZAWSZE WIDOCZNE ===
+  // === HTML ===
   container.innerHTML = `
     <section class="details-gallery">
       <div class="image-wrapper">
@@ -102,10 +166,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     <section class="details-info">
       <h2>${nameText}</h2>
       <div class="variant-controls" id="variantControls"></div>
-      <p><strong data-key="details_length">${t("details_length")}</strong> ${translateValue(item.length, "filter")}</p>
-      <p><strong data-key="details_style">${t("details_style")}</strong> ${translateArray(item.style, "filter")}</p>
-      <p><strong data-key="details_face">${t("details_face")}</strong> ${translateArray(item.faceShapes, "filter")}</p>
-      <p><strong data-key="details_hair">${t("details_hair")}</strong> ${translateArray(item.hairType, "hair")}</p>
+      <p><strong data-key="details_length">${t("details_length")}</strong> ${lengthTranslated}</p>
+      <p><strong data-key="details_style">${t("details_style")}</strong> ${styleTranslated}</p>
+      <p><strong data-key="details_face">${t("details_face")}</strong> ${faceTranslated}</p>
+      <p><strong data-key="details_hair">${t("details_hair")}</strong> ${hairTranslated}</p>
       <p>${descText}</p>
       <button id="backBtn" class="back-btn" data-key="back_button">${t("back_button")}</button>
     </section>
@@ -115,12 +179,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectHTML = [];
   const variantPrefix = "filter";
 
-  // === SELECTY ZAWSZE TWORZONE (nawet przy 1 opcji) ===
-  // Boki
+  // === SELECTY ===
   if (uniqueBoki.length >= 1) {
     const options = uniqueBoki.map(o => {
       const key = o.toLowerCase().replace(/ /g, "_");
-      return `<option value="${o}" data-key="${variantPrefix}_${key}">${o}</option>`;
+      return `<option value="${o}" data-key="${variantPrefix}_${key}">${translateValue(o, variantPrefix)}</option>`;
     }).join("");
     selectHTML.push(`
       <div class="variant-group">
@@ -130,11 +193,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     `);
   }
 
-  // Góra эксплуатации
   if (uniqueGora.length >= 1) {
     const options = uniqueGora.map(o => {
       const key = o.toLowerCase().replace(/ /g, "_");
-      return `<option value="${o}" data-key="${variantPrefix}_${key}">${o}</option>`;
+      return `<option value="${o}" data-key="${variantPrefix}_${key}">${translateValue(o, variantPrefix)}</option>`;
     }).join("");
     selectHTML.push(`
       <div class="variant-group">
@@ -144,11 +206,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     `);
   }
 
-  // Grzywka
   if (uniqueGrzywka.length >= 1) {
     const options = uniqueGrzywka.map(o => {
       const key = o.toLowerCase().replace(/ /g, "_");
-      return `<option value="${o}" data-key="${variantPrefix}_${key}">${o}</option>`;
+      return `<option value="${o}" data-key="${variantPrefix}_${key}">${translateValue(o, variantPrefix)}</option>`;
     }).join("");
     selectHTML.push(`
       <div class="variant-group">
@@ -159,18 +220,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   controls.innerHTML = selectHTML.join("");
-  // Nie chowaj selectów – są zawsze widoczne
 
-  // === USTAWIENIE DOMYŚLNYCH WARTOŚCI SELECTÓW ===
-  if (document.getElementById("bokiSelect")) {
-    document.getElementById("bokiSelect").value = defaultVariant.boki;
-  }
-  if (document.getElementById("goraSelect")) {
-    document.getElementById("goraSelect").value = defaultVariant.gora;
-  }
-  if (document.getElementById("grzywkaSelect")) {
-    document.getElementById("grzywkaSelect").value = defaultVariant.grzywka;
-  }
+  // === USTAWIENIE DOMYŚLNYCH WARTOŚCI ===
+  if (document.getElementById("bokiSelect")) document.getElementById("bokiSelect").value = defaultVariant.boki;
+  if (document.getElementById("goraSelect")) document.getElementById("goraSelect").value = defaultVariant.gora;
+  if (document.getElementById("grzywkaSelect")) document.getElementById("grzywkaSelect").value = defaultVariant.grzywka;
 
   // === TŁUMACZENIE SELECTÓW ===
   function translateSelects() {
@@ -183,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // === AKTUALIZACJA ZDJĘCIA I OPISU ===
+  // === AKTUALIZACJA ZDJĘCIA ===
   const descEl = document.getElementById("variantDesc");
   const imgEl = document.getElementById("mainImage");
 
@@ -198,20 +252,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       imgEl.style.opacity = 0;
       imgEl.onerror = null;
       imgEl.src = variant.src;
-      imgEl.onerror = () => {
-        if (imgEl.src !== DEFAULT_FALLBACK) {
-          imgEl.src = DEFAULT_FALLBACK;
-        }
-      };
-      imgEl.onload = () => {
-        imgEl.style.opacity = 1;
-      };
+      imgEl.onerror = () => { if (imgEl.src !== DEFAULT_FALLBACK) imgEl.src = DEFAULT_FALLBACK; };
+      imgEl.onload = () => { imgEl.style.opacity = 1; };
     }
 
-    if (variant.desc) {
-      const descText = typeof variant.desc === "object"
-        ? (variant.desc[currentLang] || variant.desc.pl || variant.desc.en || "")
-        : variant.desc;
+    if (variant.desc?.[currentLang] || variant.desc?.pl) {
+      const descText = variant.desc[currentLang] || variant.desc.pl || "";
       descEl.textContent = descText;
       descEl.style.display = "block";
     } else {
@@ -234,18 +280,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (window.location.pathname.includes("details.html")) {
       window.updateLanguage();
 
+      // Aktualizacja pól tekstowych
       document.querySelectorAll("p").forEach(p => {
         if (p.innerHTML.includes("details_length")) {
-          p.innerHTML = `<strong data-key="details_length">${t("details_length")}</strong> ${translateValue(item.length, "filter")}`;
+          p.innerHTML = `<strong data-key="details_length">${t("details_length")}</strong> ${translateArray(lengthArr, "filter") || "?"}`;
         }
         if (p.innerHTML.includes("details_style")) {
-          p.innerHTML = `<strong data-key="details_style">${t("details_style")}</strong> ${translateArray(item.style, "filter")}`;
+          p.innerHTML = `<strong data-key="details_style">${t("details_style")}</strong> ${translateArray(styleArr, "filter") || "brak stylu"}`;
         }
         if (p.innerHTML.includes("details_face")) {
-          p.innerHTML = `<strong data-key="details_face">${t("details_face")}</strong> ${translateArray(item.faceShapes, "filter")}`;
+          p.innerHTML = `<strong data-key="details_face">${t("details_face")}</strong> ${translateArray(faceArr, "filter") || "dowolny"}`;
         }
         if (p.innerHTML.includes("details_hair")) {
-          p.innerHTML = `<strong data-key="details_hair">${t("details_hair")}</strong> ${translateArray(item.hairType, "hair")}`;
+          p.innerHTML = `<strong data-key="details_hair">${t("details_hair")}</strong> ${translateArray(hairArr, "hair") || "dowolny"}`;
         }
       });
 
