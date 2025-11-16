@@ -14,9 +14,12 @@ const translations = {
     filter_high_fade: "Wysoki fade",
     filter_mid_fade: "Mid fade",
     filter_low_fade: "Niski fade",
-    filter_taper: "Taper",
     filter_burst_fade: "Burst fade",
+    filter_taper: "Taper fade",
     filter_undercut: "Undercut",
+    filter_tapered_3mm: "Wycieniowane od 3mm",
+    filter_classic_scissors: "Klasyczne nożyczkami",
+    filter_creative: "Kreatywne",
 
     //gora
     filter_textured: "Z teksturą",
@@ -70,20 +73,6 @@ const translations = {
     hair_wavy: "Falowane",
     hair_curly: "Kręcone",
 
-    // --- Warianty ---
-    variant_none: "Brak",
-    variant_side: "Z boku",
-    variant_curtain: "Kurtyna",
-    variant_textured: "Z teksturą",
-    variant_loose: "Luźna",
-    variant_high_fade: "Wysoki fade",
-    variant_mid_fade: "Mid fade",
-    variant_burst_fade: "Burst fade",
-    variant_low_fade: "Niski fade",
-    variant_taper: "Taper",
-    variant_undercut: "Undercut",
-    variant_short: "Krótka",
-    variant_straight: "Prosta",
 
     // --- Inne ---
     loading: "Ładowanie...",
@@ -101,9 +90,12 @@ const translations = {
     filter_high_fade: "High Fade",
     filter_mid_fade: "Mid Fade",
     filter_low_fade: "Low Fade",
-    filter_burst_fade: "Burst fade",
-    filter_taper: "Taper",
+    filter_burst_fade: "Burst Fade",
+    filter_taper: "Taper Fade",
     filter_undercut: "Undercut",
+    filter_tapered_3mm: "Tapered from 3mm",
+    filter_classic_scissors: "Classic with Scissors",
+    filter_creative: "Creative",
 
     filter_short: "Short",
     filter_medium: "Medium",
@@ -149,20 +141,6 @@ const translations = {
     hair_wavy: "Wavy",
     hair_curly: "Curly",
 
-    variant_none: "None",
-    variant_side: "Side-parted",
-    variant_curtain: "Curtain",
-    variant_textured: "Textured",
-    variant_loose: "Loose",
-    variant_high_fade: "High Fade",
-    variant_mid_fade: "Mid Fade",
-    variant_burst_fade: "Burst fade",
-    variant_low_fade: "Low Fade",
-    variant_taper: "Taper",
-    variant_undercut: "Undercut",
-    variant_short: "Short",
-    variant_straight: "Straight",
-
     loading: "Loading...",
     footer: "© 2025 Men's Hairstyle Catalog"
   },
@@ -181,6 +159,9 @@ const translations = {
     filter_burst_fade: "Burst fade",
     filter_taper: "Тейпер",
     filter_undercut: "Андеркат",
+    filter_tapered_3mm: "Затінено від 3мм",
+    filter_classic_scissors: "Класичні ножицями",
+    filter_creative: "Креативне",
 
     filter_short: "Короткий",
     filter_medium: "Середній",
@@ -225,20 +206,6 @@ const translations = {
     hair_straight: "Пряме",
     hair_wavy: "Хвилясте",
     hair_curly: "Кучеряве",
-
-    variant_none: "Немає",
-    variant_side: "З боків",
-    variant_curtain: "Куртина",
-    variant_textured: "Текстуроване",
-    variant_loose: "Розпущене",
-    variant_high_fade: "Високий фейд",
-    variant_mid_fade: "Середній фейд",
-    variant_burst_fade: "Burst fade",
-    variant_low_fade: "Нgateкий фейд",
-    variant_taper: "Тейпер",
-    variant_undercut: "Андеркат",
-    variant_short: "Коротке",
-    variant_straight: "Пряме",
 
     loading: "Завантаження...",
     footer: "© 2025 Каталог Чоловічих Зачісок"

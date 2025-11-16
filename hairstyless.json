@@ -1,0 +1,351 @@
+[
+  {
+    "name": { "pl": "Buzz Cut", "en": "Buzz Cut", "ua": "Базз Кат" },
+    "length": "short",
+    "style": ["sport", "modern"],
+    "boki": ["high_fade", "mid_fade", "low_fade"],
+    "gora": ["short"],
+    "grzywka": ["none", "straight"],
+    "faceShapes": ["oval", "square"],
+    "hairType": ["straight", "wavy", "curly"],
+    "description": {
+      "pl": "Bardzo krótka fryzura o równomiernej długości. Nie wymaga stylizacji.",
+      "en": "A very short hairstyle with an even length. Requires no styling.",
+      "ua": "Дуже коротка зачіска рівної довжини. Не потребує укладки."
+    },
+    "images": {
+      "default": {
+        "src": "./images/buzz_cut.jpg",
+        "desc": {
+          "pl": "Klasyczny buzz cut – równo, czysto",
+          "en": "Classic buzz cut – even, clean",
+          "ua": "Класичний базз кат – рівно, чисто"
+        }
+      },
+      "high_fade_short_none": {
+        "src": "./images/buzz_cut_high.jpg",
+        "desc": {
+          "pl": "Buzz Cut z high fade",
+          "en": "Buzz Cut with high fade",
+          "ua": "Базз Кат з high fade"
+        }
+      },
+      "mid_fade_short_none": {
+        "src": "./images/buzz_cut_mid.jpg",
+        "desc": {
+          "pl": "Buzz Cut z mid fade",
+          "en": "Buzz Cut with mid fade",
+          "ua": "Базз Кат з mid fade"
+        }
+      },
+      "low_fade_short_none": {
+        "src": "./images/buzz_cut_low.jpg",
+        "desc": {
+          "pl": "Buzz Cut z low fade",
+          "en": "Buzz Cut with low fade",
+          "ua": "Базз Кат з low fade"
+        }
+      },
+      "high_fade_short_straight": {
+        "src": "./images/buzz_cut_high_straight.jpg",
+        "desc": {
+          "pl": "Buzz Cut z high fade i prostą grzywką",
+          "en": "Buzz Cut with high fade and straight bangs",
+          "ua": "Базз Кат з high fade та прямою чубчиком"
+        }
+      }
+    }
+  },
+  {
+    "name": { "pl": "Curtain Bangs", "en": "Curtain Bangs", "ua": "Чубчик-Куртина" },
+    "length": "medium",
+    "style": ["retro", "modern"],
+    "boki": ["taper", "undercut"],
+    "gora": ["medium"],
+    "grzywka": ["curtain"],
+    "faceShapes": ["oval", "round"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Długa grzywka podzielona na dwie części, opadająca po bokach.",
+      "en": "Long bangs parted in the middle, falling to the sides.",
+      "ua": "Довга чубчик, розділена посередині, спадає по боках."
+    },
+    "images": {
+      "default": { "src": "./images/curtain_bangs.jpg" },
+      "taper_medium_curtain": { "src": "./images/curtain_bangs_taper.jpg" }
+    }
+},
+  {
+    "name": { "pl": "Crew Cut", "en": "Crew Cut", "ua": "Крю Кат" },
+    "length": "short",
+    "style": ["classic"],
+    "boki": ["low_fade", "taper"],
+    "gora": ["short"],
+    "grzywka": ["none"],
+    "faceShapes": ["oval", "round", "square"],
+    "hairType": ["straight"],
+    "description": {
+      "pl": "Krótko przycięte boki i nieco dłuższy top. Klasyczny, uniwersalny krój.",
+      "en": "Short sides with slightly longer top. Classic, versatile cut.",
+      "ua": "Коротко підстрижені боки і трохи довший верх. Класичний, універсальний крій."
+    },
+    "images": {
+      "default": { "src": "./images/crew_cut.jpg" },
+      "low_fade_short_none": { "src": "./images/crew_cut_low.jpg" },
+      "taper_short_none": { "src": "./images/crew_cut_taper.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Crop (French Crop)", "en": "Crop (French Crop)", "ua": "Кроп (Французький Кроп)" },
+    "length": "short",
+    "style": ["modern"],
+    "boki": ["mid_fade", "low_fade"],
+    "gora": ["short"],
+    "grzywka": ["straight", "textured"],
+    "faceShapes": ["oval", "triangle"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Krótki top z prostą grzywką i mocno przyciętymi bokami.",
+      "en": "Short top with straight fringe and heavily tapered sides.",
+      "ua": "Короткий верх з прямою чубчиком і сильно підстриженими боками."
+    },
+    "images": {
+      "default": { "src": "./images/french_crop.jpg" },
+      "mid_fade_short_straight": { "src": "./images/french_crop_mid.jpg" },
+      "low_fade_short_textured": { "src": "./images/french_crop_low_textured.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Mod Cut", "en": "Mod Cut", "ua": "Мод Кат" },
+    "length": "medium",
+    "style": ["modern", "retro"],
+    "boki": ["taper", "undercut"],
+    "gora": ["medium", "textured"],
+    "grzywka": ["curtain", "side"],
+    "faceShapes": ["oval", "round"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Nowoczesna fryzura z dłuższą górą i cieniowanymi bokami. Retro z nutą współczesności.",
+      "en": "Modern cut with longer top and tapered sides. Retro with a contemporary twist.",
+      "ua": "Сучасна зачіска з довшим верхом і звуженими боками. Ретро з сучасним відтінком."
+    },
+    "images": {
+      "default": { "src": "./images/mod_cut.jpg" },
+      "taper_medium_curtain": { "src": "./images/mod_cut_taper_curtain.jpg" },
+      "undercut_textured_side": { "src": "./images/mod_cut_undercut_side.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Faux Hawk", "en": "Faux Hawk", "ua": "Фо Гок" },
+    "length": "short",
+    "style": ["alternative", "modern"],
+    "boki": ["mid_fade", "high_fade"],
+    "gora": ["textured", "spiky"],
+    "grzywka": ["none"],
+    "faceShapes": ["oval", "square", "diamond"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Łagodniejsza wersja mohawka – włosy uniesione pośrodku, bez golenia boków.",
+      "en": "Softer version of mohawk – hair lifted in the center, no shaved sides.",
+      "ua": "М’якша версія мохавка – волосся підняте по центру, без гоління боків."
+    },
+    "images": {
+      "default": { "src": "./images/faux_hawk.jpg" },
+      "mid_fade_textured_none": { "src": "./images/faux_hawk_mid.jpg" },
+      "high_fade_spiky_none": { "src": "./images/faux_hawk_high_spiky.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Comb Over", "en": "Comb Over", "ua": "Зачес" },
+    "length": "short",
+    "style": ["classic"],
+    "boki": ["taper"],
+    "gora": ["short"],
+    "grzywka": ["side"],
+    "faceShapes": ["oval", "square"],
+    "hairType": ["straight"],
+    "description": {
+      "pl": "Włosy zaczesane na bok, często z wyraźnym przedziałkiem.",
+      "en": "Hair combed to the side, often with a defined part.",
+      "ua": "Волосся зачесане на бік, часто з чітким проділом."
+    },
+    "images": {
+      "default": { "src": "./images/comb_over.jpg" },
+      "taper_short_side": { "src": "./images/comb_over_taper.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Slick Back", "en": "Slick Back", "ua": "Слік Бек" },
+    "length": "medium",
+    "style": ["classic"],
+    "boki": ["taper"],
+    "gora": ["medium"],
+    "grzywka": ["side"],
+    "faceShapes": ["oval", "diamond"],
+    "hairType": ["straight"],
+    "description": {
+      "pl": "Włosy zaczesane do tyłu z połyskiem. Wymaga pomady.",
+      "en": "Hair slicked back with shine. Requires pomade.",
+      "ua": "Волосся зачесане назад з блиском. Потребує помади."
+    },
+    "images": {
+      "default": { "src": "./images/slick_back.jpg" },
+      "taper_medium_side": { "src": "./images/slick_back_taper.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Man Bun", "en": "Man Bun", "ua": "Мужній Пучок" },
+    "length": "long",
+    "style": ["alternative"],
+    "boki": ["long"],
+    "gora": ["long"],
+    "grzywka": ["none"],
+    "faceShapes": ["oval", "triangle"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Długie włosy zebrane w kok na czubku głowy.",
+      "en": "Long hair tied into a bun on top of the head.",
+      "ua": "Довге волосся зібране в пучок на верхівці."
+    },
+    "images": {
+      "default": { "src": "./images/man_bun.jpg" }
+    }
+  },
+    {
+    "name": { "pl": "Side Part", "en": "Side Part", "ua": "Бічний Проділ" },
+    "length": "short",
+    "style": ["classic"],
+    "boki": ["taper"],
+    "gora": ["short"],
+    "grzywka": ["side"],
+    "faceShapes": ["oval", "square"],
+    "hairType": ["straight"],
+    "description": {
+      "pl": "Klasyczny przedziałek z boku, włosy zaczesane na jedną stronę.",
+      "en": "Classic side part, hair combed to one side.",
+      "ua": "Класичний бічний проділ, волосся зачесане на один бік."
+    },
+    "images": {
+      "default": { "src": "./images/side_part.jpg" },
+      "taper_short_side": { "src": "./images/side_part_taper.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Quiff", "en": "Quiff", "ua": "Квіфф" },
+    "length": "medium",
+    "style": ["modern", "retro"],
+    "boki": ["mid_fade", "taper"],
+    "gora": ["long", "voluminous"],
+    "grzywka": ["side", "textured"],
+    "faceShapes": ["oval", "round"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Uniesiona góra z objętością, cieniowane boki.",
+      "en": "Voluminous top, faded sides.",
+      "ua": "Об’ємний верх, звужені боки."
+    },
+    "images": {
+      "default": { "src": "./images/quiff.jpg" },
+      "mid_fade_long_side": { "src": "./images/quiff_mid.jpg" },
+      "taper_voluminous_textured": { "src": "./images/quiff_taper_textured.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Pompadour", "en": "Pompadour", "ua": "Помпадур" },
+    "length": "medium",
+    "style": ["classic", "retro"],
+    "boki": ["taper"],
+    "gora": ["long", "voluminous"],
+    "grzywka": ["none"],
+    "faceShapes": ["oval", "diamond"],
+    "hairType": ["straight"],
+    "description": {
+      "pl": "Wysoka, uniesiona góra, gładkie boki.",
+      "en": "High, voluminous top with slick sides.",
+      "ua": "Високий, об’ємний верх з гладкими боками."
+    },
+    "images": {
+      "default": { "src": "./images/pompadour.jpg" },
+      "taper_long_none": { "src": "./images/pompadour_taper.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Undercut", "en": "Undercut", "ua": "Андеркат" },
+    "length": "medium",
+    "style": ["modern", "alternative"],
+    "boki": ["undercut"],
+    "gora": ["long"],
+    "grzywka": ["side", "curtain"],
+    "faceShapes": ["oval", "square", "diamond"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Wyraźnie oddzielone boki i długa góra.",
+      "en": "Disconnected sides with long top.",
+      "ua": "Відокремлені боки з довгим верхом."
+    },
+    "images": {
+      "default": { "src": "./images/undercut.jpg" },
+      "undercut_long_side": { "src": "./images/undercut_side.jpg" },
+      "undercut_long_curtain": { "src": "./images/undercut_curtain.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "High and Tight", "en": "High and Tight", "ua": "Хай енд Тай" },
+    "length": "short",
+    "style": ["military", "sport"],
+    "boki": ["high_fade"],
+    "gora": ["short"],
+    "grzywka": ["none"],
+    "faceShapes": ["oval", "square"],
+    "hairType": ["straight"],
+    "description": {
+      "pl": "Ekstremalnie krótko na bokach, krótko na górze.",
+      "en": "Extremely short sides, short top.",
+      "ua": "Екстремально коротко по боках, коротко зверху."
+    },
+    "images": {
+      "default": { "src": "./images/high_and_tight.jpg" },
+      "high_fade_short_none": { "src": "./images/high_and_tight_high.jpg" }
+    }
+  },
+  {
+    "name": { "pl": "Caesar Cut", "en": "Caesar Cut", "ua": "Цезар Кат" },
+    "length": "short",
+    "style": ["classic"],
+    "boki": ["taper"],
+    "gora": ["short"],
+    "grzywka": ["straight"],
+    "faceShapes": ["oval", "round"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Krótka fryzura z prostą grzywką opadającą na czoło.",
+      "en": "Short cut with straight fringe falling over the forehead.",
+      "ua": "Коротка зачіска з прямою чубчиком, що спадає на чоло."
+    },
+    "images": {
+      "default": { "src": "./images/caesar_cut.jpg" },
+      "taper_short_straight": { "src": "./images/caesar_cut_taper.jpg" }
+    }
+  },
+  
+  {
+    "name": { "pl": "Textured Fringe", "en": "Textured Fringe", "ua": "Текстурована Чубчик" },
+    "length": "short",
+    "style": ["modern"],
+    "boki": ["mid_fade", "low_fade"],
+    "gora": ["textured"],
+    "grzywka": ["textured"],
+    "faceShapes": ["oval", "round", "triangle"],
+    "hairType": ["straight", "wavy"],
+    "description": {
+      "pl": "Krótka fryzura z mocno teksturowaną grzywką i ostrym fade na bokach.",
+      "en": "Short hairstyle with heavily textured fringe and sharp fade on sides.",
+      "ua": "Коротка зачіска з сильно текстурованою чубчиком і різким фейдом на боках."
+    },
+    "images": {
+      "default": { "src": "./images/textured_fringe.jpg" },
+      "mid_fade_textured_textured": { "src": "./images/textured_fringe_mid.jpg" },
+      "low_fade_textured_textured": { "src": "./images/textured_fringe_low.jpg" }
+    }
+  }
+]

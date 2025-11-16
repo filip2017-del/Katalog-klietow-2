@@ -1,4 +1,4 @@
-// admin.js – Z PRZYCISKIEM ZAPISU ZMIAN
+// admin.js – PEŁNA WERSJA Z PRIORYTETEM DEFAULT I ZAWSZE W OPCJACH
 document.addEventListener("DOMContentLoaded", async () => {
   await waitForLang();
   let hairstyles = [];
@@ -19,14 +19,177 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const options = {
     style: ["classic", "modern", "sport", "alternative", "retro", "natural", "military"],
-    boki: ["high_fade", "mid_fade", "low_fade", "burst_fade", "taper", "undercut"],
+    boki: [
+            "high_fade",
+            "mid_fade",
+            "low_fade",
+            "burst_fade",
+            "taper",
+            "undercut",
+            "tapered_3mm",
+            "classic_scissors",
+            "creative"
+          ],
     gora: ["short", "medium", "long", "textured", "voluminous", "spiky"],
     grzywka: ["none", "straight", "curtain", "side", "textured"],
     faceShapes: ["oval", "round", "square", "triangle", "diamond"],
     hairType: ["straight", "wavy", "curly"]
   };
 
-  // === Ładowanie fryzur ===
+  // --------------------------------------------------------------------
+  // 1. GENEROWANIE KLUCZY: default TYLKO GDY BRAK INNYCH OPCJI
+  // --------------------------------------------------------------------
+  function generateAvailableKeys() {
+    const keys = new Set();
+
+    const selectedBoki = getChecked("bokiCheckboxes");
+    const selectedGora = getChecked("goraCheckboxes");
+    const selectedGrzywka = getChecked("grzywkaCheckboxes");
+
+    if (selectedBoki.length && selectedGora.length && selectedGrzywka.length) {
+      selectedBoki.forEach(b => {
+        selectedGora.forEach(g => {
+          selectedGrzywka.forEach(gr => {
+            keys.add(`${b}_${g}_${gr}`);
+          });
+        });
+      });
+    }
+
+    if (keys.size === 0) {
+      keys.add("default");
+    }
+
+    return Array.from(keys).sort();
+  }
+
+  // --------------------------------------------------------------------
+  // 2. ODŚWIEŻANIE SELECTÓW
+  // --------------------------------------------------------------------
+  function refreshImageKeySelects() {
+    const available = generateAvailableKeys();
+    document.querySelectorAll(".image-row .image-key").forEach(select => {
+      const current = select.value;
+      const wasAvailable = available.includes(current);
+
+      // Zawsze dodaj "default" jeśli jest w danych
+      const currentRow = select.closest(".image-row");
+      const isDefaultRow = currentRow && currentRow.querySelector(".image-src").value.includes("default");
+
+      const finalAvailable = [...available];
+      if (isDefaultRow || (editingId !== null && hairstyles[editingId]?.images?.default)) {
+        if (!finalAvailable.includes("default")) finalAvailable.unshift("default");
+      }
+
+      select.innerHTML = finalAvailable.map(k =>
+        `<option value="${k}" ${k === current ? "selected" : ""}>${k}</option>`
+      ).join("");
+
+      if (!wasAvailable && finalAvailable.length > 0) {
+        select.value = finalAvailable[0];
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------
+  // 3. DODAWANIE WIERSZA ZDJĘCIA – default ZAWSZE W OPCJACH, GDY ISTNIEJE
+  // --------------------------------------------------------------------
+  function addImageRow(selectedKey = "default", src = "", descPl = "") {
+    const row = document.createElement("div");
+    row.className = "image-row";
+
+    // Pobieramy dostępne klucze z kombinacji
+    const availableFromOptions = generateAvailableKeys();
+
+    // ZAWSZE DODAJEMY "default" DO OPCJI, JEŚLI JEST WYBRANY LUB ISTNIEJE W JSON
+    const shouldIncludeDefault = selectedKey === "default" || 
+      (editingId !== null && hairstyles[editingId]?.images?.default);
+
+    const available = [...new Set([
+      ...availableFromOptions,
+      ...(shouldIncludeDefault ? ["default"] : [])
+    ])].sort();
+
+    const optionsHtml = available.map(k =>
+      `<option value="${k}" ${k === selectedKey ? "selected" : ""}>${k}</option>`
+    ).join("");
+
+    const defaultSrc = src || "./images/haircut.jpg";
+    const defaultDesc = descPl || "Opis domyślny";
+
+    row.innerHTML = `
+      <select class="image-key">${optionsHtml}</select>
+      
+      <div class="src-with-preview">
+        <input type="text" value="${defaultSrc}" placeholder="Ścieżka do obrazu" class="image-src" />
+        <button type="button" class="preview-btn" title="Podgląd zdjęcia">Podgląd</button>
+      </div>
+
+      <input type="text" value="${defaultDesc}" placeholder="Opis obrazu (PL)" class="image-desc-pl" />
+      <button type="button" class="remove-image">Usuń</button>
+    `;
+
+    imagesContainer.appendChild(row);
+
+    row.querySelector(".remove-image").addEventListener("click", () => {
+      row.remove();
+      markChanged();
+    });
+
+    row.querySelector(".image-key").addEventListener("change", markChanged);
+
+    const srcInput = row.querySelector(".image-src");
+    const previewBtn = row.querySelector(".preview-btn");
+
+    previewBtn.addEventListener("click", () => {
+      const currentSrc = srcInput.value.trim();
+      if (!currentSrc) return;
+
+      const popup = document.createElement("div");
+      popup.className = "image-preview-popup";
+      popup.innerHTML = `
+        <div class="popup-content">
+          <span class="popup-close">×</span>
+          <img src="${currentSrc}" alt="Podgląd" onerror="this.src='./images/haircut.jpg'" />
+        </div>
+      `;
+      document.body.appendChild(popup);
+
+      popup.querySelector(".popup-close").onclick = () => popup.remove();
+      popup.addEventListener("click", (e) => {
+        if (e.target === popup) popup.remove();
+      });
+
+      const escHandler = (e) => {
+        if (e.key === "Escape") {
+          popup.remove();
+          document.removeEventListener("keydown", escHandler);
+        }
+      };
+      document.addEventListener("keydown", escHandler);
+    });
+
+    srcInput.addEventListener("input", markChanged);
+  }
+
+  // --------------------------------------------------------------------
+  // 4. NASŁUCHIWANIE CHECKBOXÓW
+  // --------------------------------------------------------------------
+  function attachCheckboxListeners() {
+    ["boki", "gora", "grzywka"].forEach(prefix => {
+      const container = document.getElementById(prefix + "Checkboxes");
+      if (container) {
+        container.addEventListener("change", () => {
+          refreshImageKeySelects();
+          markChanged();
+        });
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------
+  // 5. ŁADOWANIE FRYZUR
+  // --------------------------------------------------------------------
   async function loadHairstyles() {
     try {
       const res = await fetch("hairstyles.json");
@@ -35,24 +198,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderList();
       resetChanges();
     } catch (err) {
-      listEl.innerHTML = `<p style="color: #f66;">Błąd ładowania: ${err.message}</p>`;
+      listEl.innerHTML = `<p style="color:#f66;">Błąd ładowania: ${err.message}</p>`;
     }
   }
 
-  // === Renderowanie listy z drag & drop ===
+  // --------------------------------------------------------------------
+  // 6. RENDEROWANIE LISTY
+  // --------------------------------------------------------------------
   function renderList() {
     listEl.innerHTML = hairstyles.length === 0
-      ? `<p style="color: #aaa; text-align: center;">Brak fryzur. Dodaj pierwszą!</p>`
+      ? `<p style="color:#aaa;text-align:center;">Brak fryzur. Dodaj pierwszą!</p>`
       : hairstyles.map((h, i) => `
         <div class="hairstyle-card" draggable="true" data-index="${i}">
-          <div style="display: flex; align-items: center; gap: 1rem;">
-            <img src="${getDefaultImage(h)}" alt="${h.name?.pl || 'Brak'}" onerror="this.src='./images/haircut.jpg'" />
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <img src="${getDefaultImage(h)}" alt="${h.name?.pl||'Brak'}" onerror="this.src='./images/haircut.jpg'" />
             <div>
-              <strong>${h.name?.pl || "Brak nazwy"}</strong><br>
-              <small>
-                ${h.length || "?"} • 
-                ${translateArray(h.style, 'filter') || "brak stylu"}
-              </small>
+              <strong>${h.name?.pl||"Brak nazwy"}</strong><br>
+              <small>${h.length||"?"} • ${translateArray(h.style,'filter')||"brak stylu"}</small>
             </div>
           </div>
           <div class="hairstyle-actions">
@@ -62,49 +224,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
       `).join("");
 
-    // === DRAG & DROP ===
     const cards = listEl.querySelectorAll(".hairstyle-card");
     let dragged = null;
-
-    cards.forEach(card => {
-      card.addEventListener("dragstart", (e) => {
-        dragged = card;
-        setTimeout(() => card.classList.add("dragging"), 0);
-      });
-
-      card.addEventListener("dragend", () => {
-        card.classList.remove("dragging");
-        dragged = null;
-        markChanged();
-      });
-
-      card.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        card.classList.add("drag-over");
-      });
-
-      card.addEventListener("dragleave", () => {
-        card.classList.remove("drag-over");
-      });
-
-      card.addEventListener("drop", (e) => {
-        e.preventDefault();
-        card.classList.remove("drag-over");
-
-        if (dragged && dragged !== card) {
-          const fromIndex = parseInt(dragged.dataset.index);
-          const toIndex = parseInt(card.dataset.index);
-
-          const [moved] = hairstyles.splice(fromIndex, 1);
-          hairstyles.splice(toIndex, 0, moved);
-
+    cards.forEach(c => {
+      c.addEventListener("dragstart", e => { dragged = c; setTimeout(() => c.classList.add("dragging"), 0); });
+      c.addEventListener("dragend", () => { c.classList.remove("dragging"); dragged = null; markChanged(); });
+      c.addEventListener("dragover", e => { e.preventDefault(); c.classList.add("drag-over"); });
+      c.addEventListener("dragleave", () => c.classList.remove("drag-over"));
+      c.addEventListener("drop", e => {
+        e.preventDefault(); c.classList.remove("drag-over");
+        if (dragged && dragged !== c) {
+          const from = +dragged.dataset.index;
+          const to = +c.dataset.index;
+          const [m] = hairstyles.splice(from, 1);
+          hairstyles.splice(to, 0, m);
           renderList();
         }
       });
     });
   }
 
-  // === Śledzenie zmian ===
+  // --------------------------------------------------------------------
+  // 7. ŚLEDZENIE ZMIAN
+  // --------------------------------------------------------------------
   function markChanged() {
     if (!hasUnsavedChanges) {
       hasUnsavedChanges = true;
@@ -114,7 +256,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       changesStatus.textContent = "Masz niezapisane zmiany";
     }
   }
-
   function resetChanges() {
     hasUnsavedChanges = false;
     saveContainer.style.display = "none";
@@ -123,7 +264,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     changesStatus.textContent = "";
   }
 
-  // === Zapis ===
+  // --------------------------------------------------------------------
+  // 8. ZAPIS DO PLIKU
+  // --------------------------------------------------------------------
   async function saveToFile() {
     const data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(hairstyles, null, 2));
     const a = document.createElement("a");
@@ -131,51 +274,52 @@ document.addEventListener("DOMContentLoaded", async () => {
     a.download = "hairstyles.json";
     a.click();
 
-    // Powiadomienie
     const notif = document.createElement("div");
     notif.className = "save-notification";
     notif.textContent = "Zapisano hairstyles.json";
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 2000);
 
-    // Reset
     originalHairstyles = JSON.parse(JSON.stringify(hairstyles));
     resetChanges();
   }
+  saveBtn.addEventListener("click", () => hasUnsavedChanges && saveToFile());
 
-  // === Przycisk zapisu zmian ===
-  saveBtn.addEventListener("click", () => {
-    if (hasUnsavedChanges) {
-      saveToFile();
-    }
-  });
-
+  // --------------------------------------------------------------------
+  // 9. PRIORYTET: default Z JSON W MINIATURCE
+  // --------------------------------------------------------------------
   function getDefaultImage(h) {
     if (!h?.images) return "./images/haircut.jpg";
-    return h.images.default?.src || Object.values(h.images)[0]?.src || "./images/haircut.jpg";
+    if (h.images.default?.src) return h.images.default.src;
+    return Object.values(h.images)[0]?.src || "./images/haircut.jpg";
   }
 
+  // --------------------------------------------------------------------
+  // 10. CHECKBOXY
+  // --------------------------------------------------------------------
   function createCheckboxes(containerId, values, selected = []) {
     const container = document.getElementById(containerId);
-    container.innerHTML = values.map(val => `
-      <label><input type="checkbox" value="${val}" ${selected.includes(val) ? "checked" : ""}> ${translateValue(val, 'filter')}</label>
+    if (!container) return;
+    container.innerHTML = values.map(v => `
+      <label><input type="checkbox" value="${v}" ${selected.includes(v)?"checked":""}> ${translateValue(v,'filter')}</label>
     `).join("");
+    refreshImageKeySelects();
   }
 
+  // --------------------------------------------------------------------
+  // 11. DODAJ WIERSZ ZDJĘCIA
+  // --------------------------------------------------------------------
   document.getElementById("addImage").addEventListener("click", () => {
-    const row = document.createElement("div");
-    row.className = "image-row";
-    row.innerHTML = `
-      <input type="text" placeholder="Klucz (np. high_fade_short_none)" class="image-key" />
-      <input type="text" placeholder="Ścieżka do obrazu" class="image-src" />
-      <input type="text" placeholder="Opis obrazu (PL)" class="image-desc-pl" />
-      <button type="button" class="remove-image">Usuń</button>
-    `;
-    imagesContainer.appendChild(row);
-    row.querySelector(".remove-image").addEventListener("click", () => row.remove());
+    const available = generateAvailableKeys();
+    const firstKey = available[0] || "default";
+    addImageRow(firstKey, "./images/haircut.jpg", "Opis domyślny");
+    markChanged();
   });
 
-  form.addEventListener("submit", async (e) => {
+  // --------------------------------------------------------------------
+  // 12. ZAPIS FORMULARZA – BEZ DEFAULT, JEŚLI SĄ INNE ZDJĘCIA
+  // --------------------------------------------------------------------
+  form.addEventListener("submit", async e => {
     e.preventDefault();
 
     const data = {
@@ -192,7 +336,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     document.querySelectorAll(".image-row").forEach(row => {
-      const key = row.querySelector(".image-key").value.trim();
+      const key = row.querySelector(".image-key").value;
       const src = row.querySelector(".image-src").value.trim();
       const descPl = row.querySelector(".image-desc-pl").value.trim();
       if (key && src) {
@@ -201,29 +345,37 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    if (!data.images.default && Object.keys(data.images).length > 0) {
-      data.images.default = Object.values(data.images)[0];
+    // USUŃ DEFAULT Z JSON, JEŚLI SĄ INNE ZDJĘCIA
+    if (data.images.default && Object.keys(data.images).length > 1) {
+      delete data.images.default;
     }
 
-    if (editingId === null) {
-      hairstyles.push(data);
-    } else {
-      hairstyles[editingId] = data;
+    // OPCJONALNIE: brak zdjęć → dodaj default
+    if (Object.keys(data.images).length === 0) {
+      data.images.default = { src: "./images/haircut.jpg" };
     }
+
+    if (editingId === null) hairstyles.push(data);
+    else hairstyles[editingId] = data;
 
     await saveToFile();
     closeForm();
     loadHairstyles();
   });
 
-  function get(id) { return document.getElementById(id).value.trim(); }
-  function getChecked(containerId) {
-    return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map(cb => cb.value);
+  function get(id) { return document.getElementById(id)?.value.trim() || ""; }
+  function getChecked(id) {
+    const container = document.getElementById(id);
+    if (!container) return [];
+    return Array.from(container.querySelectorAll("input:checked")).map(cb => cb.value);
   }
 
-  window.editHairstyle = function(index) {
-    const h = hairstyles[index];
-    editingId = index;
+  // --------------------------------------------------------------------
+  // 13. EDYCJA FRYZURY – PRIORYTET: default Z JSON
+  // --------------------------------------------------------------------
+  window.editHairstyle = function (idx) {
+    const h = hairstyles[idx];
+    editingId = idx;
     formTitle.textContent = "Edytuj fryzurę";
     formEl.style.display = "block";
     addBtn.style.display = "none";
@@ -244,44 +396,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     createCheckboxes("hairCheckboxes", options.hairType, h.hairType || []);
 
     imagesContainer.innerHTML = "";
-    Object.entries(h.images || {}).forEach(([key, img]) => {
-      const row = document.createElement("div");
-      row.className = "image-row";
-      row.innerHTML = `
-        <input type="text" value="${key}" class="image-key" />
-        <input type="text" value="${img.src}" class="image-src" />
-        <input type="text" value="${img.desc?.pl || ''}" class="image-desc-pl" />
-        <button type="button" class="remove-image">Usuń</button>
-      `;
-      imagesContainer.appendChild(row);
-      row.querySelector(".remove-image").addEventListener("click", () => row.remove());
+
+    // PRIORYTET: default Z JSON → pierwszy wiersz
+    if (h.images?.default) {
+      addImageRow("default", h.images.default.src || "", h.images.default.desc?.pl || "");
+    }
+
+    // Pozostałe zdjęcia
+    Object.entries(h.images || {}).forEach(([k, img]) => {
+      if (k !== "default") {
+        addImageRow(k, img.src || "", img.desc?.pl || "");
+      }
     });
+
+    // Brak zdjęć → domyślny wiersz
+    if (Object.keys(h.images || {}).length === 0) {
+      addImageRow("default", "./images/haircut.jpg", "Opis domyślny");
+    }
+
+    attachCheckboxListeners();
+    refreshImageKeySelects();
   };
 
-  function set(id, value) { document.getElementById(id).value = value || ""; }
+  function set(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.value = v || "";
+  }
 
-  window.deleteHairstyle = async function(index) {
+  // --------------------------------------------------------------------
+  // 14. USUWANIE FRYZURY
+  // --------------------------------------------------------------------
+  window.deleteHairstyle = async function (idx) {
     if (confirm("Na pewno usunąć?")) {
-      hairstyles.splice(index, 1);
+      hairstyles.splice(idx, 1);
       await saveToFile();
       loadHairstyles();
     }
   };
 
+  // --------------------------------------------------------------------
+  // 15. ZAMKNIJ FORMULARZ
+  // --------------------------------------------------------------------
   cancelBtn.addEventListener("click", closeForm);
   function closeForm() {
     formEl.style.display = "none";
     addBtn.style.display = "block";
     form.reset();
     editingId = null;
-    imagesContainer.innerHTML = `<div class="image-row">
-      <input type="text" placeholder="default" class="image-key" value="default" />
-      <input type="text" placeholder="./images/nowa.jpg" class="image-src" />
-      <input type="text" placeholder="Opis domyślny" class="image-desc-pl" />
-      <button type="button" class="remove-image">Usuń</button>
-    </div>`;
+
+    imagesContainer.innerHTML = "";
+    const available = generateAvailableKeys();
+    const firstKey = available[0] || "default";
+    addImageRow(firstKey, "./images/haircut.jpg", "Opis domyślny");
+
+    attachCheckboxListeners();
+    refreshImageKeySelects();
   }
 
+  // --------------------------------------------------------------------
+  // 16. DODAJ NOWĄ FRYZURĘ
+  // --------------------------------------------------------------------
   addBtn.addEventListener("click", () => {
     editingId = null;
     formTitle.textContent = "Dodaj nową fryzurę";
@@ -289,25 +463,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     addBtn.style.display = "none";
     form.reset();
 
-    Object.keys(options).forEach(key => {
-      createCheckboxes(key + "Checkboxes", options[key], []);
-    });
+    Object.keys(options).forEach(k => createCheckboxes(k + "Checkboxes", options[k], []));
 
-    imagesContainer.innerHTML = `<div class="image-row">
-      <input type="text" placeholder="default" class="image-key" value="default" />
-      <input type="text" placeholder="./images/nowa.jpg" class="image-src" />
-      <input type="text" placeholder="Opis domyślny" class="image-desc-pl" />
-      <button type="button" class="remove-image">Usuń</button>
-    </div>`;
+    imagesContainer.innerHTML = "";
+    const available = generateAvailableKeys();
+    const firstKey = available[0] || "default";
+    addImageRow(firstKey, "./images/haircut.jpg", "Opis domyślny");
+
+    attachCheckboxListeners();
+    refreshImageKeySelects();
   });
 
+  // --------------------------------------------------------------------
+  // 17. INICJALIZACJA
+  // --------------------------------------------------------------------
   loadHairstyles();
   updateLanguage();
+  attachCheckboxListeners();
 });
 
 async function waitForLang() {
-  return new Promise(resolve => {
-    const check = () => (window.t && window.translateArray ? resolve() : setTimeout(check, 50));
+  return new Promise(r => {
+    const check = () => (window.t && window.translateArray ? r() : setTimeout(check, 50));
     check();
   });
 }

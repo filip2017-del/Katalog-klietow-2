@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const controls = document.getElementById("variantControls");
   const selectHTML = [];
-  const variantPrefix = "variant";
+  const variantPrefix = "filter";
 
   // === SELECTY ZAWSZE TWORZONE (nawet przy 1 opcji) ===
   // Boki

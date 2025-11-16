@@ -37,10 +37,22 @@
       "ua": "Дуже коротка зачіска рівної довжини. Не потребує укладки."
     },
     "images": {
-      "default": {
+      "high_fade_short_straight": {
         "src": "./images/buzz_cut.jpg",
         "desc": {
           "pl": "Buzz Cut z high fade"
+        }
+      },
+      "high_fade_short_none": {
+        "src": "./images/buzz_cut2.jpg",
+        "desc": {
+          "pl": "Buzz Cut z high fade 2"
+        }
+      },
+      "default": {
+        "src": "./images/buzz_cut2.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
         }
       }
     }
@@ -57,7 +69,8 @@
       "retro"
     ],
     "boki": [
-      "taper"
+      "taper",
+      "tapered_3mm"
     ],
     "gora": [
       "long",
@@ -79,8 +92,11 @@
       "ua": "Високий, об’ємний верх з гладкими боками."
     },
     "images": {
-      "default": {
-        "src": "./images/pompadour.jpg"
+      "tapered_3mm_long_none": {
+        "src": "./images/pompadour.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -96,6 +112,8 @@
       "retro"
     ],
     "boki": [
+      "low_fade",
+      "burst_fade",
       "taper",
       "undercut"
     ],
@@ -119,8 +137,23 @@
       "ua": "Довга чубчик, розділена посередині, спадає по боках."
     },
     "images": {
-      "default": {
-        "src": "./images/curtain_bangs.jpg"
+      "low_fade_medium_curtain": {
+        "src": "./images/curtain_bangs2.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
+      },
+      "undercut_medium_curtain": {
+        "src": "./images/curtain_bangs.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
+      },
+      "taper_medium_curtain": {
+        "src": "./images/haircut.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -176,6 +209,7 @@
       "modern"
     ],
     "boki": [
+      "high_fade",
       "mid_fade",
       "low_fade"
     ],
@@ -201,7 +235,22 @@
     },
     "images": {
       "default": {
-        "src": "./images/french_crop.jpg"
+        "src": "./images/french_crop.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
+      },
+      "high_fade_short_textured": {
+        "src": "./images/crop3.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
+      },
+      "mid_fade_short_textured": {
+        "src": "./images/crop2.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -238,53 +287,17 @@
       "ua": "Класичний бічний проділ, волосся зачесане на один бік."
     },
     "images": {
-      "default": {
-        "src": "./images/side_part.jpg"
-      },
       "taper_short_side": {
-        "src": "./images/side_part_2.jpg"
+        "src": "./images/side_part_2.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       },
       "mid_fade_short_side": {
-        "src": "./images/side_part.jpg"
-      }
-    }
-  },
-  {
-    "name": {
-      "pl": "Crew Cut",
-      "en": "Crew Cut",
-      "ua": "Крю Кат"
-    },
-    "length": "short",
-    "style": [
-      "classic"
-    ],
-    "boki": [
-      "low_fade",
-      "taper"
-    ],
-    "gora": [
-      "short"
-    ],
-    "grzywka": [
-      "none"
-    ],
-    "faceShapes": [
-      "oval",
-      "round",
-      "square"
-    ],
-    "hairType": [
-      "straight"
-    ],
-    "description": {
-      "pl": "Krótko przycięte boki i nieco dłuższy top. Klasyczny, uniwersalny krój.",
-      "en": "Short sides with slightly longer top. Classic, versatile cut.",
-      "ua": "Коротко підстрижені боки і трохи довший верх. Класичний, універсальний крій."
-    },
-    "images": {
-      "default": {
-        "src": "./images/crew_cut.jpg"
+        "src": "./images/side_part.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -323,8 +336,17 @@
       "ua": "Коротка зачіска з сильно текстурованою чубчиком і різким фейдом на боках."
     },
     "images": {
+      "mid_fade_textured_textured": {
+        "src": "./images/textured_fringe.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
+      },
       "default": {
-        "src": "./images/textured_fringe.jpg"
+        "src": "./images/textured_fringe2.jpg",
+        "desc": {
+          "pl": "Opis domyślny"
+        }
       }
     }
   },
@@ -522,39 +544,36 @@
   },
   {
     "name": {
-      "pl": "Caesar Cut",
-      "en": "Caesar Cut",
-      "ua": "Цезар Кат"
+      "pl": "Modern mullet",
+      "en": "Modern mullet",
+      "ua": "Modern mullet"
     },
-    "length": "short",
+    "length": "medium",
     "style": [
-      "classic"
+      "modern"
     ],
     "boki": [
+      "low_fade",
+      "burst_fade",
       "taper"
     ],
     "gora": [
-      "short"
+      "medium",
+      "textured"
     ],
     "grzywka": [
-      "straight"
+      "textured"
     ],
-    "faceShapes": [
-      "oval",
-      "round"
-    ],
-    "hairType": [
-      "straight",
-      "wavy"
-    ],
+    "faceShapes": [],
+    "hairType": [],
     "description": {
-      "pl": "Krótka fryzura z prostą grzywką opadającą na czoło.",
-      "en": "Short cut with straight fringe falling over the forehead.",
-      "ua": "Коротка зачіска з прямою чубчиком, що спадає на чоло."
+      "pl": "",
+      "en": "",
+      "ua": ""
     },
     "images": {
       "default": {
-        "src": "./images/caesar_cut.jpg"
+        "src": "./images/modern_mullet.jpg"
       }
     }
   },
@@ -596,6 +615,119 @@
     "images": {
       "default": {
         "src": "./images/undercut.jpg"
+      }
+    }
+  },
+  {
+    "name": {
+      "pl": "Flat top",
+      "en": "Flat top",
+      "ua": "Flat top"
+    },
+    "length": "short",
+    "style": [
+      "alternative",
+      "military"
+    ],
+    "boki": [
+      "mid_fade"
+    ],
+    "gora": [
+      "short"
+    ],
+    "grzywka": [
+      "none"
+    ],
+    "faceShapes": [
+      "oval",
+      "square",
+      "diamond"
+    ],
+    "hairType": [
+      "straight",
+      "wavy"
+    ],
+    "description": {
+      "pl": "",
+      "en": "",
+      "ua": ""
+    },
+    "images": {
+      "default": {
+        "src": "./images/flat_top.jpg"
+      }
+    }
+  },
+  {
+    "name": {
+      "pl": "Crew Cut",
+      "en": "Crew Cut",
+      "ua": "Крю Кат"
+    },
+    "length": "short",
+    "style": [
+      "classic"
+    ],
+    "boki": [
+      "low_fade",
+      "taper"
+    ],
+    "gora": [
+      "short"
+    ],
+    "grzywka": [
+      "none"
+    ],
+    "faceShapes": [
+      "oval",
+      "round",
+      "square"
+    ],
+    "hairType": [
+      "straight"
+    ],
+    "description": {
+      "pl": "Krótko przycięte boki i nieco dłuższy top. Klasyczny, uniwersalny krój.",
+      "en": "Short sides with slightly longer top. Classic, versatile cut.",
+      "ua": "Коротко підстрижені боки і трохи довший верх. Класичний, універсальний крій."
+    },
+    "images": {
+      "default": {
+        "src": "./images/crew_cut.jpg"
+      }
+    }
+  },
+  {
+    "name": {
+      "pl": "test",
+      "en": "fvb",
+      "ua": "bdf"
+    },
+    "length": "short",
+    "style": [
+      "classic"
+    ],
+    "boki": [
+      "high_fade"
+    ],
+    "gora": [],
+    "grzywka": [],
+    "faceShapes": [
+      "oval",
+      "round"
+    ],
+    "hairType": [
+      "straight",
+      "wavy"
+    ],
+    "description": {
+      "pl": "",
+      "en": "",
+      "ua": ""
+    },
+    "images": {
+      "default": {
+        "src": "./images/haircut.jpg"
       }
     }
   }

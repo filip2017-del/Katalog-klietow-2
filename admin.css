@@ -1,4 +1,4 @@
-/* admin.css – Z PEŁNĄ KONTROLĄ ZAPISU */
+/* admin.css – Z PEŁNĄ KONTROLĄ ZAPISU + STYL SELECT */
 .admin-container {
   max-width: 1000px;
   margin: 2rem auto;
@@ -87,18 +87,30 @@
 
 .image-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-columns: 1.5fr 1.5fr 1fr auto;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
-  align-items: center;
+  align-items: start;
 }
 
+.image-row select,
 .image-row input {
   padding: 0.5rem;
   background: #333;
   border: 1px solid #555;
   color: white;
   border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.image-row select {
+  cursor: pointer;
+}
+
+.image-row select:focus,
+.image-row input:focus {
+  outline: 2px solid #4a9;
+  border-color: #4a9;
 }
 
 .remove-image {
@@ -107,6 +119,11 @@
   border: none;
   padding: 0.5rem;
   border-radius: 6px;
+  cursor: pointer;
+}
+
+.remove-image:hover {
+  background: #a33;
 }
 
 #addImage, .add-btn {
@@ -144,7 +161,6 @@
   cursor: pointer;
 }
 
-/* Panel zapisu */
 .save-changes-container {
   text-align: center;
   padding: 1.5rem 0;
@@ -173,28 +189,6 @@
   background: #2a7;
 }
 
-#saveAsBtn {
-  background: #2a7;
-  margin-left: 1rem;
-}
-
-#saveAsBtn:hover {
-  background: #1a6;
-}
-
-#resetFolderBtn {
-  background: #555;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#resetFolderBtn:hover {
-  background: #666;
-}
-
-/* Powiadomienie */
 .save-notification {
   position: fixed;
   bottom: 20px;
@@ -212,4 +206,105 @@
 @keyframes fadeInOut {
   0%, 100% { opacity: 0; transform: translateY(10px); }
   20%, 80% { opacity: 1; transform: translateY(0); }
+}
+
+/* === PRZYCISK PODGLĄDU === */
+.preview-btn {
+  background: #2a7;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.preview-btn:hover {
+  background: #1a6;
+}
+
+/* === POPUP PODGLĄDU === */
+.image-preview-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  padding: 2rem;
+  backdrop-filter: blur(4px);
+}
+
+.popup-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  text-align: center;
+}
+
+.popup-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.popup-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: #c33;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.popup-close:hover {
+  background: #a22;
+}
+
+/* Kontener: ścieżka + przycisk pod spodem */
+.src-with-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.preview-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.preview-btn:hover {
+  background: #2980b9;
+}
+
+.remove-image {
+  background: #c33;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.remove-image:hover {
+  background: #a33;
 }
