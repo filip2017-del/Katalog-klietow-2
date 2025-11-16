@@ -229,6 +229,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentLang = window.currentLang();
     if (resultsSection.style.display === "block") showResults();
   });
+  // === HAMBURGER MENU ===
+const hamburger = document.getElementById("hamburgerBtn");
+const topNav = document.getElementById("topNav");
+
+hamburger?.addEventListener("click", () => {
+  hamburger.classList.toggle("open");
+  topNav.classList.toggle("open");
+});
+
+// Zamknij po kliknięciu linku
+topNav?.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    hamburger.classList.remove("open");
+    topNav.classList.remove("open");
+  });
+});
 
   // === START ===
   showNextCard();

@@ -11,19 +11,25 @@
 </head>
 <body>
   <header>
+  <div class="header-mobile">
+    <button class="hamburger" id="hamburgerBtn">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="top-nav" id="topNav">
+    <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog</a>
+    <a href="builder.html" class="nav-link" data-key="nav_builder">Builder</a>
+    <a href="matcher.html" class="nav-link active" data-key="matcher_title">Matcher</a>
+    <a href="admin.html" class="nav-link" data-key="nav_admin">Admin</a>
+
     <div class="lang-switch">
       <button class="lang-btn active" data-lang="pl">PL</button>
       <button class="lang-btn" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="ua">UA</button>
     </div>
-
-    <nav class="top-nav">
-      <a href="index.html" class="nav-link" data-key="nav_catalog">Katalog</a>
-      <a href="builder.html" class="nav-link" data-key="nav_builder">Builder</a>
-      <a href="matcher.html" class="nav-link active" data-key="matcher_title">Matcher</a>
-      <a href="admin.html" class="nav-link" data-key="nav_admin">Admin</a>
-    </nav>
-  </header>
+  </nav>
+</header>
 
   <main class="matcher-container">
     <!-- Karta do swipe -->

@@ -159,3 +159,57 @@
   padding: 1rem 2.5rem;
   font-size: 1.1rem;
 }
+
+/* === HEADER: MOBILE HAMBURGER === */
+@media (max-width: 768px) {
+  .top-nav {
+    position: fixed;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #111;
+    flex-direction: column;
+    padding: 1rem;
+    border-top: 1px solid #333;
+    transform: translateY(-100%);
+    transition: transform .3s ease;
+    z-index: 999;
+  }
+
+  .top-nav.open {
+    transform: translateY(0);
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .hamburger span {
+    width: 24px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all .3s;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+  /* Ukryj lang-switch na mobile – przenieś do menu */
+  .lang-switch {
+    position: static;
+    justify-content: center;
+    margin-top: 1rem;
+    order: 2;
+  }
+}
+
+/* Desktop – normalny header */
+@media (min-width: 769px) {
+  .hamburger { display: none; }
+}
