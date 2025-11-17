@@ -1,9 +1,10 @@
-// === matcher.js – POPRAWIONY WYGLĄD KOŃCOWY + RESET ===
+// === matcher.js – TINDER-STYLE MATCHER + HAMBURGER MENU + PEŁNY EKRAN ===
 document.addEventListener("DOMContentLoaded", async () => {
   if (typeof updateLanguage !== "function") {
     await new Promise(r => setTimeout(r, 100));
   }
 
+  // === ELEMENTY DOM ===
   const cardContainer = document.getElementById("cardContainer");
   const resultsSection = document.getElementById("resultsSection");
   const matchesGrid = document.getElementById("matchesGrid");
@@ -13,13 +14,50 @@ document.addEventListener("DOMContentLoaded", async () => {
   const likeBtn = document.getElementById("likeBtn");
   const actionButtons = document.querySelector(".action-buttons");
 
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const topNav = document.getElementById("topNav");
+
   let hairstyles = [];
   let currentIndex = 0;
   let liked = JSON.parse(localStorage.getItem("matcher_liked") || "[]");
   let disliked = JSON.parse(localStorage.getItem("matcher_disliked") || "[]");
 
   const DEFAULT_IMAGE = "./images/haircut.jpg";
+  let currentLang = "pl";
 
+  // === HAMBURGER MENU LOGIC – PEŁNY FIX ===
+  if (hamburgerBtn && topNav) {
+    hamburgerBtn.addEventListener("click", () => {
+      const isOpen = topNav.classList.toggle("open");
+      hamburgerBtn.classList.toggle("open", isOpen);
+      hamburgerBtn.setAttribute("aria-expanded", isOpen);
+      topNav.setAttribute("aria-hidden", !isOpen);
+    });
+
+    // Zamknij po kliknięciu linku
+    topNav.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", () => {
+        topNav.classList.remove("open");
+        hamburgerBtn.classList.remove("open");
+        hamburgerBtn.setAttribute("aria-expanded", "false");
+        topNav.setAttribute("aria-hidden", "true");
+      });
+    });
+
+    // Zamknij po zmianie języka
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setTimeout(() => {
+          topNav.classList.remove("open");
+          hamburgerBtn.classList.remove("open");
+          hamburgerBtn.setAttribute("aria-expanded", "false");
+          topNav.setAttribute("aria-hidden", "true");
+        }, 100);
+      });
+    });
+  }
+
+  // === ŁADOWANIE FRYZUR ===
   try {
     const res = await fetch("hairstyles.json");
     hairstyles = await res.json();
@@ -28,12 +66,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Dodaj ID do fryzur (jeśli brak)
+  // Dodaj ID jeśli brak
   hairstyles.forEach((h, i) => {
     if (!h.id) h.id = `hairstyle_${i}`;
   });
 
-  // Usuń już ocenione
+  // Filtruj już ocenione
   const available = hairstyles.filter(h => 
     !liked.some(l => l.id === h.id) && 
     !disliked.some(d => d.id === h.id)
@@ -44,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // === TWORZENIE KARTY ===
   function createCard(item) {
     const validImages = getValidImages(item.images);
     const imgSrc = validImages[0]?.src || DEFAULT_IMAGE;
@@ -55,16 +94,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     card.dataset.id = item.id;
 
     card.innerHTML = `
-      <div class="choice dislike">✗</div>
-      <div class="choice like">✓</div>
+      <div class="choice dislike">Nie</div>
+      <div class="choice like">Tak</div>
       <div class="gallery">
         <img src="${imgSrc}" alt="${name}" loading="lazy">
       </div>
       <div class="card-info">
         <h3>${name}</h3>
         <p>${desc}</p>
-        <p><strong>${t("details_length")}:</strong> ${translateArray(item.length, "filter")}</p>
-        <p><strong>${t("details_style")}:</strong> ${translateArray(item.style, "filter")}</p>
+        <p><strong>${t("details_length")}</strong> ${translateArray(item.length, "filter")}</p>
+        <p><strong>${t("details_style")}</strong> ${translateArray(item.style, "filter")}</p>
       </div>
     `;
 
@@ -82,6 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return images.length > 0 ? images : [{ src: DEFAULT_IMAGE }];
   }
 
+  // === SWIPE LOGIKA ===
   function setupSwipe(card, item) {
     let startX = 0, moveX = 0;
     const threshold = 100;
@@ -154,44 +194,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     cardContainer.appendChild(card);
   }
 
-  // === POPRAWIONY WYŚWIETL WYNIKÓW ===
+  // === WYNIKI ===
   function showResults() {
-    // Ukryj karty i przyciski
-    cardContainer.innerHTML = "";
-    actionButtons.style.display = "none"; // ← UKRYJ PRZYCISKI
+  // === CZYŚĆ CAŁY EKRAN ===
+  cardContainer.innerHTML = "";
+  cardContainer.style.height = "0";
+  cardContainer.style.margin = "0";
+  
+  actionButtons.style.display = "none";
+  actionButtons.style.height = "0";
+  actionButtons.style.margin = "0";
 
-    resultsSection.style.display = "block";
+  resultsSection.style.display = "block";
+  resultsSection.style.paddingTop = "2rem"; // niewielki odstęp
 
-    if (liked.length === 0) {
-      matchesGrid.innerHTML = `<p class="empty-state">Nie polubiłeś żadnej fryzury.</p>`;
-      bestMatchText.textContent = "";
-      return;
-    }
-
-    const best = findBestMatch(liked);
-    bestMatchText.innerHTML = `
-      <strong>${t("matcher_best") || "Najlepszy wybór dla Ciebie"}:</strong><br>
-      ${best.name[currentLang] || best.name.pl}
-    `;
-
-    liked.forEach(item => {
-      const img = (item.images?.default?.src) || Object.values(item.images || {})[0]?.src || DEFAULT_IMAGE;
-      const name = item.name[currentLang] || item.name.pl;
-
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <img src="${img}" alt="${name}" loading="lazy" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">
-        <h3>${name}</h3>
-        <p style="font-size:0.9rem; color:#ccc;">${item.description[currentLang] || item.description.pl}</p>
-      `;
-      card.addEventListener("click", () => {
-        localStorage.setItem("selectedHairstyle", JSON.stringify(item));
-        window.location.href = "details.html";
-      });
-      matchesGrid.appendChild(card);
-    });
+  if (liked.length === 0) {
+    matchesGrid.innerHTML = `<p class="empty-state">Nie polubiłeś żadnej fryzury.</p>`;
+    bestMatchText.textContent = "";
+    return;
   }
+
+  const best = findBestMatch(liked);
+  bestMatchText.innerHTML = `
+    <strong>${t("matcher_best") || "Najlepszy wybór dla Ciebie"}:</strong><br>
+    ${best.name[currentLang] || best.name.pl}
+  `;
+
+  liked.forEach(item => {
+    const img = (item.images?.default?.src) || Object.values(item.images || {})[0]?.src || DEFAULT_IMAGE;
+    const name = item.name[currentLang] || item.name.pl;
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${img}" alt="${name}" loading="lazy" style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
+      <h3>${name}</h3>
+      <p style="font-size:0.9rem; color:#ccc;">${item.description[currentLang] || item.description.pl}</p>
+    `;
+    card.addEventListener("click", () => {
+      localStorage.setItem("selectedHairstyle", JSON.stringify(item));
+      window.location.href = "details.html";
+    });
+    matchesGrid.appendChild(card);
+  });
+}
 
   function findBestMatch(likedItems) {
     const scores = {};
@@ -216,35 +262,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (card) finishSwipe(card, available[currentIndex], "like");
   };
 
-  // === RESET – PRZYCISK "ZACZNIJ OD NOWA" ===
   restartBtn.onclick = () => {
-    localStorage.removeItem("matcher_liked");
-    localStorage.removeItem("matcher_disliked");
-    location.reload();
-  };
+  localStorage.removeItem("matcher_liked");
+  localStorage.removeItem("matcher_disliked");
+  
+  // Pełny reload + ominięcie cache
+  window.location.replace(window.location.pathname + '?reset=' + Date.now());
+};
 
   // === ZMIANA JĘZYKA ===
-  let currentLang = "pl";
   window.addEventListener("languageChanged", () => {
     currentLang = window.currentLang();
     if (resultsSection.style.display === "block") showResults();
   });
-  // === HAMBURGER MENU ===
-const hamburger = document.getElementById("hamburgerBtn");
-const topNav = document.getElementById("topNav");
-
-hamburger?.addEventListener("click", () => {
-  hamburger.classList.toggle("open");
-  topNav.classList.toggle("open");
-});
-
-// Zamknij po kliknięciu linku
-topNav?.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    hamburger.classList.remove("open");
-    topNav.classList.remove("open");
-  });
-});
 
   // === START ===
   showNextCard();

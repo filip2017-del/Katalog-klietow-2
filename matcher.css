@@ -1,18 +1,121 @@
-/* === MATCHER – TINDER STYLE === */
-.matcher-container {
-  max-width: 420px;
-  margin: 2rem auto;
-  padding: 1rem;
-  text-align: center;
-  position: relative;
+/* === MATCHER.CSS – TINDER-STYLE, PEŁNY EKRAN, HAMBURGER, GLOW BUTTONS === */
+
+/* === HEADER – PRZYKLEJONY DO GÓRY === */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  background: #111;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  height: 60px;
 }
 
+.hamburger {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* === WYSUWANE MENU === */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #111;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem 1rem 1rem;
+  border-bottom: 1px solid #333;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 999;
+  gap: 1.5rem;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.top-nav.open {
+  transform: translateY(0);
+  visibility: visible;
+  opacity: 1;
+}
+
+.top-nav .nav-link {
+  font-size: 1.1rem;
+  padding: 0.8rem 1.5rem;
+  width: 100%;
+  text-align: center;
+  border-radius: 8px;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+.top-nav .lang-switch {
+  margin-top: 1rem;
+  order: 99;
+}
+
+/* === MAIN – ODSTĘP OD HEADERA === */
+main {
+  margin-top: 60px;
+  padding: 1rem;
+}
+
+/* === KONTENER MATCHERA === */
+.matcher-container {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* === STOS KART === */
 .card-stack {
   position: relative;
   height: 540px;
-  margin-bottom: 2rem;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 380px;
 }
 
+/* === KARTA DO SWIPE === */
 .matcher-card {
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -25,191 +128,207 @@
   transition: transform .4s cubic-bezier(.2,.8,.4,1);
   width: 100%;
   height: 100%;
-}
-
-.matcher-card.dragging {
-  transition: none;
-  z-index: 1000;
-}
-
-.matcher-card .gallery {
-  height: 380px;
-  position: relative;
-  overflow: hidden;
+  margin: 0 auto;
 }
 
 .matcher-card .gallery img {
   width: 100%;
-  height: 100%;
+  height: 320px;
   object-fit: cover;
-  object-position: center;
 }
 
-.card-info {
-  padding: 1.2rem;
-  text-align: left;
-}
-
-.card-info h3 {
-  margin: 0 0 .5rem;
-  font-size: 1.4rem;
+.matcher-card .card-info {
+  padding: 1rem;
   color: #fff;
 }
 
-.card-info p {
-  margin: .3rem 0;
-  font-size: .95rem;
+.matcher-card .card-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.matcher-card .card-info p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
   color: #ccc;
 }
 
-/* Ikony decyzji */
+/* === WYBÓR NA KARCIE (✗ / ✓) === */
 .choice {
   position: absolute;
-  top: 20px;
+  top: 1.5rem;
   font-size: 3rem;
   font-weight: bold;
   opacity: 0;
-  transition: opacity .3s, transform .3s;
-  z-index: 10;
   pointer-events: none;
-}
-
-.choice.like {
-  right: 20px;
-  color: #4ade80;
-  transform: rotate(-20deg);
+  z-index: 10;
+  transition: opacity .3s;
 }
 
 .choice.dislike {
-  left: 20px;
-  color: #f87171;
-  transform: rotate(20deg);
+  left: 1.5rem;
+  color: #ff5252;
+  text-shadow: 0 0 15px rgba(255, 82, 82, 0.7);
 }
 
-/* Przyciski akcji */
+.choice.like {
+  right: 1.5rem;
+  color: #4caf50;
+  text-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
+}
+
+/* === PRZYCISKI AKCJI – GLOW === */
 .action-buttons {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  margin: 1rem 0;
+  gap: 3rem;
+  margin: 2rem 0;
 }
 
 .action-btn {
-  width: 64px;
-  height: 64px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   border: none;
   cursor: pointer;
-  transition: all .2s;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.action-btn.like {
-  background: #4ade80;
-  color: white;
-  box-shadow: 0 4px 12px rgba(74,222,128,.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .action-btn.dislike {
-  background: #f87171;
+  background: #ff5252;
   color: white;
-  box-shadow: 0 4px 12px rgba(248,113,113,.4);
+}
+
+.action-btn.like {
+  background: #4caf50;
+  color: white;
 }
 
 .action-btn:hover {
   transform: scale(1.1);
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
 }
 
-/* Wyniki */
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+/* === EKRAN KOŃCOWY – TWOJE MATCHE === */
 .results {
-  margin-top: 2rem;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 2rem 1rem 1rem;
+  text-align: center;
+  display: none;
+}
+
+.results h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
 }
 
 .best-match {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: #4ade80;
   font-weight: 600;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  margin: 0.8rem 0 1.5rem;
+  line-height: 1.4;
+}
+
+#matchesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin-top: 1rem;
 }
 
 #matchesGrid .card {
-  cursor: pointer;
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,.3);
   transition: transform .2s;
+  cursor: pointer;
 }
 
 #matchesGrid .card:hover {
   transform: translateY(-4px);
 }
 
-/* Pusty stan */
-.empty-state {
-  color: #aaa;
-  font-size: 1.1rem;
-  margin: 3rem 0;
+#matchesGrid .card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #333;
 }
 
+#matchesGrid .card h3 {
+  margin: 0.8rem 0 0.4rem;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+#matchesGrid .card p {
+  margin: 0 0 0.8rem;
+  padding: 0 0.8rem;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+/* === PRZYCISK RESTART === */
 #restartBtn {
   margin: 2rem auto 0;
   display: block;
-  padding: 1rem 2.5rem;
+  padding: 0.9rem 2rem;
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+#restartBtn:hover {
+  background: #333;
+  border-color: #666;
+  transform: translateY(-1px);
+}
+
+/* === STANY PUSTE === */
+.empty-state {
+  color: #999;
   font-size: 1.1rem;
+  margin: 2rem 0;
 }
 
-/* === HEADER: MOBILE HAMBURGER === */
-@media (max-width: 768px) {
-  .top-nav {
-    position: fixed;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #111;
-    flex-direction: column;
-    padding: 1rem;
-    border-top: 1px solid #333;
-    transform: translateY(-100%);
-    transition: transform .3s ease;
-    z-index: 999;
+/* === RESPONSIVE === */
+@media (max-width: 480px) {
+  .top-nav .nav-link {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
   }
-
-  .top-nav.open {
-    transform: translateY(0);
+  .card-stack {
+    height: 500px;
   }
-
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    cursor: pointer;
-    padding: 8px;
-  }
-
-  .hamburger span {
-    width: 24px;
-    height: 3px;
-    background: #fff;
-    border-radius: 2px;
-    transition: all .3s;
-  }
-
-  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
-
-  /* Ukryj lang-switch na mobile – przenieś do menu */
-  .lang-switch {
-    position: static;
-    justify-content: center;
-    margin-top: 1rem;
-    order: 2;
+  .matcher-card .gallery img {
+    height: 280px;
   }
 }
+/* === CZYSTE PRZEJŚCIE DO WYNIKÓW === */
+.card-stack,
+.action-buttons {
+  transition: all 0.3s ease;
+}
 
-/* Desktop – normalny header */
-@media (min-width: 769px) {
-  .hamburger { display: none; }
+.results {
+  transition: opacity 0.3s ease;
 }
